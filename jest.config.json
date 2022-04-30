@@ -1,0 +1,25 @@
+{
+  "rootDir": ".",
+  "moduleFileExtensions": [
+    "ts",
+    "js",
+    "json"
+  ],
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  },
+  "testRegex": "/src/.*\\.(test|spec).(ts)$",
+  "testEnvironment": "node",
+  "collectCoverageFrom" : ["src/**/*.ts", "!**/node_modules/**", "!**/vendor/**"],
+  "coverageReporters": ["json", "lcov"],
+  "moduleNameMapper": {
+    "@src/(.*)": "<rootDir>/src/$1",
+    "@config/(.*)": "<rootDir>/src/config/$1",
+    "@api/(.*)": "<rootDir>/src/api/$1",
+    "@entities/(.*)": "<rootDir>/src/entities/$1",
+    "@errors/(.*)": "<rootDir>/src/errors/$1",
+    "@security/(.*)": "<rootDir>/src/security/$1",
+    "@utils/(.*)": "<rootDir>/src/utils/$1",
+    "@mocks/(.*)": "<rootDir>/test/mocks/$1"
+  }
+}

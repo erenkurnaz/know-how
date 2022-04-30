@@ -1,0 +1,9 @@
+services:
+  postgresql:
+    environment:
+      POSTGRES_DB: "nestjs_boilerplate"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    image: postgres
+    ports:
+      - "5432:5432"

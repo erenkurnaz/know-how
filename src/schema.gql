@@ -1,0 +1,68 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthResult {
+  accessToken: String!
+  refreshToken: String!
+  user: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+union ErrorableAuthResult = AuthResult | ServerError | ValidationError
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  login(input: LoginInput!): ErrorableAuthResult!
+  refreshAccessToken: RefreshResult!
+  register(input: RegisterInput!): ErrorableAuthResult!
+}
+
+type Query {
+  users: [User!]!
+}
+
+type RefreshResult {
+  accessToken: String!
+  user: User!
+}
+
+input RegisterInput {
+  email: String!
+  fullName: String!
+  password: String!
+}
+
+type ServerError {
+  message: String!
+  name: String!
+  status: Float!
+}
+
+type User {
+  createdAt: DateTime!
+  email: String!
+  fullName: String!
+  id: ID!
+  updatedAt: DateTime
+}
+
+type ValidationError {
+  fields: [ValidationErrorField!]!
+  message: String!
+  name: String!
+  status: Float!
+}
+
+type ValidationErrorField {
+  field: String!
+  message: String!
+}
