@@ -34,10 +34,16 @@ jobs:
   e2e:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_DB: know_how
+      POSTGRES_USER: know_how
+      POSTGRES_PASSWORD: know_how
 
     steps:
       - name: Cancel Workflow Actions
         uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
 
       - uses: actions/checkout@v3
 
