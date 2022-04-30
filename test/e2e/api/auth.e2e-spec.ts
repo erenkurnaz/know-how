@@ -135,6 +135,10 @@ const authResultExpects = (authResult: IAuthResult, user: IUser) => {
     id: expect.any(String),
     email: user.email,
     fullName: user.fullName,
+    github: null,
+    linkedin: null,
+    twitter: null,
+    instagram: null,
     createdAt: expect.any(String),
     updatedAt: null,
   });

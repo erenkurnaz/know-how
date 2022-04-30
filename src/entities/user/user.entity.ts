@@ -17,4 +17,20 @@ export class User extends BaseEntity {
   @Field()
   @Property()
   fullName: string;
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  github?: string;
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  linkedin?: string;
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  twitter?: string;
+
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  instagram?: string;
 }

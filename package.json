@@ -1,7 +1,7 @@
 {
-  "name": "nestjs-boilerplate-with-graphql",
+  "name": "know-how-api",
   "version": "0.0.1",
-  "description": "Web API boilerplate made with Nestjs, GraphQL and Mikro-Orm. Also includes Authentication (Jwt and Refresh token), e2e and unit testing.",
+  "description": "Know how api.",
   "author": "Eren Kurnaz",
   "scripts": {
     "prebuild": "rimraf dist",

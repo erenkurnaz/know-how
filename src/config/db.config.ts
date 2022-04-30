@@ -5,7 +5,7 @@ import { MikroOrmModuleOptions } from '@mikro-orm/nestjs';
 export default (): MikroOrmModuleOptions => ({
   type: 'postgresql',
   driver: PostgreSqlDriver,
-  dbName: process.env.POSTGRES_DB_NAME || 'nestjs_boilerplate',
+  dbName: process.env.POSTGRES_DB || 'nestjs_boilerplate',
   host: process.env.POSTGRES_HOST || 'localhost',
   user: process.env.POSTGRES_USER || 'postgres',
   password: process.env.POSTGRES_PASSWORD || 'postgres',

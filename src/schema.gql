@@ -51,7 +51,11 @@ type User {
   createdAt: DateTime!
   email: String!
   fullName: String!
+  github: String
   id: ID!
+  instagram: String
+  linkedin: String
+  twitter: String
   updatedAt: DateTime
 }
 
