@@ -34,6 +34,10 @@ jobs:
   e2e:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_DB: know_how
+      POSTGRES_USER: know_how
+      POSTGRES_PASSWORD: know_how
 
     steps:
       - name: Cancel Workflow Actions
