@@ -1,5 +1,9 @@
 import faker from '@faker-js/faker';
-import { executeQuery } from './graphql.helper';
+import {
+  executeQuery,
+  IErrorableResult,
+  ON_ERRORABLE_RESULT,
+} from './graphql.helper';
 
 export interface IUser {
   id: string;
@@ -13,6 +17,11 @@ export interface IUser {
   createdAt: string;
   updatedAt: string | null;
 }
+
+export type IUpdateUserInput = Omit<
+  IUser,
+  'id' | 'updatedAt' | 'createdAt' | 'password'
+>;
 
 export function createUserMock(from?: Partial<IUser>): IUser {
   return {
@@ -45,6 +54,39 @@ export const currentUserQuery = async (accessToken?: string) => {
   };
 
   return await executeQuery<IUser>(gql);
+};
+
+export const updateUserMutation = async (user: IUser, accessToken?: string) => {
+  const gql = {
+    name: 'updateUser',
+    query: `
+      mutation($input: UpdateUserInput!) {
+        updateUser(input: $input) {
+          ...on User {
+            ...UserFields
+          }
+          ${ON_ERRORABLE_RESULT}
+        }
+      }
+      ${USER_FRAGMENT}
+    `,
+    variables: {
+      input: {
+        fullName: user.fullName,
+        email: user.email,
+        github: user.github,
+        linkedin: user.linkedin,
+        twitter: user.twitter,
+        instagram: user.instagram,
+      },
+    },
+    token: accessToken,
+  };
+
+  return await executeQuery<
+    IErrorableResult<IUser>,
+    { input: IUpdateUserInput }
+  >(gql);
 };
 
 export const USER_FRAGMENT = `

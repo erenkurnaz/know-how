@@ -36,6 +36,9 @@ export const executeQuery = async <T, V = undefined>({
   const { body } = await req;
 
   const errors: ApolloError = body.errors && body.errors[0];
+  if (errors) {
+    console.error(JSON.stringify(errors));
+  }
   const data: T = body.data && body.data[name];
 
   return { data, errors };

@@ -15,6 +15,8 @@ scalar DateTime
 
 union ErrorableAuthResult = AuthResult | ServerError | ValidationError
 
+union ErrorableUserResult = ServerError | User | ValidationError
+
 input LoginInput {
   email: String!
   password: String!
@@ -24,6 +26,7 @@ type Mutation {
   login(input: LoginInput!): ErrorableAuthResult!
   refreshAccessToken: RefreshResult!
   register(input: RegisterInput!): ErrorableAuthResult!
+  updateUser(input: UpdateUserInput!): ErrorableUserResult!
 }
 
 type Query {
@@ -45,6 +48,15 @@ type ServerError {
   message: String!
   name: String!
   status: Float!
+}
+
+input UpdateUserInput {
+  email: String!
+  fullName: String!
+  github: String
+  instagram: String
+  linkedin: String
+  twitter: String
 }
 
 type User {
