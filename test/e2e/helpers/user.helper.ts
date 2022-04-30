@@ -1,4 +1,5 @@
 import faker from '@faker-js/faker';
+import { executeQuery } from './graphql.helper';
 
 export interface IUser {
   id: string;
@@ -13,26 +14,38 @@ export interface IUser {
   updatedAt: string | null;
 }
 
-export function createUserMock(from?: Partial<IUser>): Promise<IUser> {
-  return new Promise((resolve, reject) => {
-    const createdUser: IUser = {
-      id: '',
-      email: faker.internet.email(),
-      password: faker.internet.password(8),
-      fullName: faker.internet.userName(),
-      github: faker.internet.domainName(),
-      linkedin: faker.internet.domainName(),
-      twitter: faker.internet.domainName(),
-      instagram: faker.internet.domainName(),
-      createdAt: new Date().toISOString(),
-      updatedAt: null,
-      ...from,
-    };
-    createdUser
-      ? resolve(createdUser)
-      : reject(new Error('An error occurred while user mock created'));
-  });
+export function createUserMock(from?: Partial<IUser>): IUser {
+  return {
+    id: '',
+    email: faker.internet.email(),
+    password: faker.internet.password(8),
+    fullName: faker.internet.userName(),
+    github: faker.internet.domainName(),
+    linkedin: faker.internet.domainName(),
+    twitter: faker.internet.domainName(),
+    instagram: faker.internet.domainName(),
+    createdAt: new Date().toISOString(),
+    updatedAt: null,
+    ...from,
+  };
 }
+
+export const currentUserQuery = async (accessToken?: string) => {
+  const gql = {
+    name: 'currentUser',
+    query: `
+      query {
+        currentUser {
+          ...UserFields
+        }
+      }
+      ${USER_FRAGMENT}
+    `,
+    token: accessToken,
+  };
+
+  return await executeQuery<IUser>(gql);
+};
 
 export const USER_FRAGMENT = `
   fragment UserFields on User {
