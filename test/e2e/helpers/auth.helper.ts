@@ -24,6 +24,17 @@ export interface ILoginInput {
   password: string;
 }
 
+export const authorizeUser = async (user: IUser): Promise<IAuthResult> => {
+  await registerMutation(user);
+
+  const result = await loginMutation({
+    email: user.email,
+    password: user.password,
+  });
+
+  return result.data as IAuthResult;
+};
+
 export const registerMutation = async (input: IRegisterInput) => {
   const gql = {
     name: 'register',
@@ -50,17 +61,6 @@ export const registerMutation = async (input: IRegisterInput) => {
   };
 
   return await executeQuery<IErrorableResult<IAuthResult>, IRegisterInput>(gql);
-};
-
-export const authorizeUser = async (user: IUser): Promise<IAuthResult> => {
-  await registerMutation(user);
-
-  const result = await loginMutation({
-    email: user.email,
-    password: user.password,
-  });
-
-  return result.data as IAuthResult;
 };
 
 export const loginMutation = async (input: ILoginInput) => {

@@ -28,7 +28,7 @@ describe('User operations', () => {
     });
   });
 
-  describe('when user update', () => {
+  describe('when update user', () => {
     it('should return updated user', async () => {
       const authResult = await authorizeUser(USER);
       const updatedUser: IUser = {

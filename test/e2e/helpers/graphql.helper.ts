@@ -2,7 +2,7 @@ import request from 'supertest';
 import { ApolloError } from 'apollo-server-express';
 import { APP, getConfig } from '../app';
 
-// <--- Query ---> //
+// <--- Query Helper ---> //
 interface RequestOptions<T> {
   name: string;
   query: string;
@@ -43,7 +43,7 @@ export const executeQuery = async <T, V = undefined>({
 
   return { data, errors };
 };
-// <--- E: Query ---> //
+// <--- E: Query Helper ---> //
 
 // <--- Errors ---> //
 interface IValidationErrorField {
