@@ -8,14 +8,14 @@ import {
   registerMutation,
 } from '../helpers/auth.helper';
 import { createUserMock, IUser } from '../helpers/user.helper';
-import { IServerError, IValidationError } from '../helpers/api.helper';
+import { IServerError, IValidationError } from '../helpers/graphql.helper';
 
 describe('User authentication', () => {
   let USER: IUser;
 
   beforeEach(async () => {
     await clearDatabase();
-    USER = await createUserMock();
+    USER = createUserMock();
   });
 
   describe('when user register', () => {
@@ -32,7 +32,7 @@ describe('User authentication', () => {
 
     it('should fail with email used by another user', async () => {
       await registerMutation(USER);
-      const user = await createUserMock({
+      const user = createUserMock({
         email: USER.email,
       });
 
@@ -51,7 +51,7 @@ describe('User authentication', () => {
     });
 
     it('should fail with invalid email', async () => {
-      const user = await createUserMock({ email: 'invalid_email' });
+      const user = createUserMock({ email: 'invalid_email' });
 
       const response = await registerMutation(user);
       const validationError = response.data as IValidationError;
@@ -60,7 +60,7 @@ describe('User authentication', () => {
     });
 
     it('should fail with invalid password', async () => {
-      const user = await createUserMock({ password: 'inv_pwd' });
+      const user = createUserMock({ password: 'inv_pwd' });
 
       const response = await registerMutation(user);
       const validationError = response.data as IValidationError;
@@ -135,6 +135,10 @@ const authResultExpects = (authResult: IAuthResult, user: IUser) => {
     id: expect.any(String),
     email: user.email,
     fullName: user.fullName,
+    github: null,
+    linkedin: null,
+    twitter: null,
+    instagram: null,
     createdAt: expect.any(String),
     updatedAt: null,
   });
