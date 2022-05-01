@@ -1,8 +1,13 @@
-import { GqlBuilder, IUser } from '../utils/graphql';
+import {
+  POSTS_QUERY,
+  CREATE_POST_MUTATION,
+  GqlBuilder,
+  IUser,
+} from '../utils/graphql';
 import { clearDatabase } from '../utils/helpers/app.helper';
 import { authorizeUser } from '../utils/helpers/auth.helper';
 import { createUserMock } from '../utils/helpers/user.helper';
-import { POSTS_QUERY } from '../utils/graphql/queries/posts-query';
+import { IPost } from '../utils/graphql/types/post-type';
 
 describe('Post', () => {
   let USER: IUser;
@@ -14,6 +19,23 @@ describe('Post', () => {
     ACCESS_TOKEN = accessToken;
   });
 
+  it('should create and return updated post', async () => {
+    const res = await new GqlBuilder<IPost>()
+      .setQuery(CREATE_POST_MUTATION)
+      .setVariables({
+        input: {
+          title: 'title',
+          content: 'content',
+        },
+      })
+      .withAuthentication(ACCESS_TOKEN)
+      .execute();
+
+    expect(res.data.title).toEqual('title');
+    expect(res.data.content).toEqual('content');
+    expect(res.data.owner).toEqual(USER);
+  });
+
   it('should return all posts', async () => {
     const { data } = await new GqlBuilder().setQuery(POSTS_QUERY).execute();
 
@@ -23,8 +45,6 @@ describe('Post', () => {
   it.todo('should return posts by userId');
 
   it.todo('should return post by id');
-
-  it.todo('should create and return updated post');
 
   it.todo('should update and return updated post');
 
