@@ -4,6 +4,7 @@ import {
   POST_QUERY,
   GqlBuilder,
   IUser,
+  POST_BY_USER_ID_QUERY,
 } from '../utils/graphql';
 import { clearDatabase } from '../utils/helpers/app.helper';
 import { authorizeUser } from '../utils/helpers/auth.helper';
@@ -43,7 +44,20 @@ describe('Post', () => {
     expect(data).toEqual([]);
   });
 
-  it.todo('should return posts by userId');
+  it('should return posts by userId', async () => {
+    const { data: USER_POST } = await new GqlBuilder()
+      .setQuery(CREATE_POST_MUTATION)
+      .setVariables({ input: { title: 'title', content: 'content' } })
+      .withAuthentication(ACCESS_TOKEN)
+      .execute();
+
+    const { data: posts } = await new GqlBuilder<IPost[]>()
+      .setQuery(POST_BY_USER_ID_QUERY)
+      .setVariables({ userId: USER.id })
+      .execute();
+
+    expect(posts).toEqual([USER_POST]);
+  });
 
   it('should return post by id', async () => {
     const { data: CREATED_POST } = await new GqlBuilder<IPost>()
