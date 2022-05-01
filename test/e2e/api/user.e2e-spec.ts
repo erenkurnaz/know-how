@@ -5,10 +5,9 @@ import {
   createUserMock,
   currentUserQuery,
   updateUserMutation,
-  IUser,
 } from '../helpers/user.helper';
+import { IUser, IValidationError } from '../graphql/types';
 import { authorizeUser } from '../helpers/auth.helper';
-import { IValidationError } from '../helpers/graphql.helper';
 
 describe('User operations', () => {
   let USER: IUser;

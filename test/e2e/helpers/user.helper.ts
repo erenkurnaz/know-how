@@ -1,27 +1,9 @@
 import faker from '@faker-js/faker';
-import {
-  executeQuery,
-  IErrorableResult,
-  ON_ERRORABLE_RESULT,
-} from './graphql.helper';
 
-export interface IUser {
-  id: string;
-  email: string;
-  password: string;
-  fullName: string;
-  github?: string | null;
-  linkedin?: string | null;
-  twitter?: string | null;
-  instagram?: string | null;
-  createdAt: string;
-  updatedAt: string | null;
-}
-
-export type IUpdateUserInput = Omit<
-  IUser,
-  'id' | 'updatedAt' | 'createdAt' | 'password'
->;
+import { IUpdateUserInput, UPDATE_USER_MUTATION } from '../graphql/mutations';
+import { CURRENT_USER_QUERY } from '../graphql/queries';
+import { IErrorableUserResult, IUser } from '../graphql/types';
+import { GraphQLClient } from '../graphql/graphql-client';
 
 export function createUserMock(from?: Partial<IUser>): IUser {
   return {
@@ -41,35 +23,18 @@ export function createUserMock(from?: Partial<IUser>): IUser {
 
 export const currentUserQuery = async (accessToken?: string) => {
   const gql = {
-    name: 'currentUser',
-    query: `
-      query {
-        currentUser {
-          ...UserFields
-        }
-      }
-      ${USER_FRAGMENT}
-    `,
+    name: CURRENT_USER_QUERY.name,
+    query: CURRENT_USER_QUERY.query,
     token: accessToken,
   };
 
-  return await executeQuery<IUser>(gql);
+  return await new GraphQLClient().executeQuery<IUser>(gql);
 };
 
 export const updateUserMutation = async (user: IUser, accessToken?: string) => {
   const gql = {
-    name: 'updateUser',
-    query: `
-      mutation($input: UpdateUserInput!) {
-        updateUser(input: $input) {
-          ...on User {
-            ...UserFields
-          }
-          ${ON_ERRORABLE_RESULT}
-        }
-      }
-      ${USER_FRAGMENT}
-    `,
+    name: UPDATE_USER_MUTATION.name,
+    query: UPDATE_USER_MUTATION.query,
     variables: {
       input: {
         fullName: user.fullName,
@@ -83,22 +48,8 @@ export const updateUserMutation = async (user: IUser, accessToken?: string) => {
     token: accessToken,
   };
 
-  return await executeQuery<
-    IErrorableResult<IUser>,
+  return await new GraphQLClient().executeQuery<
+    IErrorableUserResult,
     { input: IUpdateUserInput }
   >(gql);
 };
-
-export const USER_FRAGMENT = `
-  fragment UserFields on User {
-    id
-    email
-    fullName
-    github
-    linkedin
-    twitter
-    instagram
-    createdAt
-    updatedAt
-  }
-`;

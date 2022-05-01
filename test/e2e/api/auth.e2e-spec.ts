@@ -3,12 +3,13 @@ import { clearDatabase } from '../app';
 
 import {
   IAuthResult,
-  IRegisterInput,
-  loginMutation,
-  registerMutation,
-} from '../helpers/auth.helper';
-import { createUserMock, IUser } from '../helpers/user.helper';
-import { IServerError, IValidationError } from '../helpers/graphql.helper';
+  IUser,
+  IServerError,
+  IValidationError,
+} from '../graphql/types';
+import { IRegisterInput } from '../graphql/mutations';
+import { loginMutation, registerMutation } from '../helpers/auth.helper';
+import { createUserMock } from '../helpers/user.helper';
 
 describe('User authentication', () => {
   let USER: IUser;
