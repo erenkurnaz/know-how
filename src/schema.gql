@@ -24,13 +24,13 @@ input LoginInput {
 
 type Mutation {
   login(input: LoginInput!): ErrorableAuthResult!
-  refreshAccessToken: RefreshResult!
   register(input: RegisterInput!): ErrorableAuthResult!
   updateUser(input: UpdateUserInput!): ErrorableUserResult!
 }
 
 type Query {
   currentUser: User!
+  refreshAccessToken: RefreshResult!
 }
 
 type RefreshResult {
