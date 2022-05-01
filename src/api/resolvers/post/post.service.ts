@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Post, PostRepository } from '@entities/post';
 import { User, UserRepository } from '@entities/user';
-import { CreatePostInput } from './dto';
+import { PostInput } from './dto';
 import { UserNotFoundException } from '@api/resolvers/auth/errors';
+import { wrap } from '@mikro-orm/core';
 
 @Injectable()
 export class PostService {
@@ -15,13 +16,27 @@ export class PostService {
     return await this.postRepository.findAll({ populate: ['owner'] });
   }
 
-  async create(user: User, postDto: CreatePostInput): Promise<Post> {
+  async create(user: User, postDto: PostInput): Promise<Post> {
     const post = new Post();
     post.title = postDto.title;
     post.content = postDto.content;
     post.owner = user;
 
     await this.postRepository.persistAndFlush(post);
+
+    return post;
+  }
+
+  async update(id: string, postDto: PostInput, userId: string): Promise<Post> {
+    const post = await this.postRepository.findOneOrFail(
+      {
+        id,
+        owner: { id: userId },
+      },
+      { populate: ['owner'] },
+    );
+    wrap(post).assign(postDto);
+    await this.postRepository.flush();
 
     return post;
   }

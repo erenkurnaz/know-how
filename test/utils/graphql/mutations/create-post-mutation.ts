@@ -1,9 +1,9 @@
-import { IPost, POST_FRAGMENT } from '../types/post-type';
+import { POST_FRAGMENT } from '../types/post-type';
 
 export const CREATE_POST_MUTATION = {
   name: 'createPost',
   query: `
-    mutation($input: CreatePostInput!) {
+    mutation($input: PostInput!) {
       createPost(input: $input) {
         ...PostFields
       }
@@ -11,7 +11,3 @@ export const CREATE_POST_MUTATION = {
     ${POST_FRAGMENT}
   `,
 };
-
-export interface ICreatePostInput {
-  input: Pick<IPost, 'title' | 'content'>;
-}

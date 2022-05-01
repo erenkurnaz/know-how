@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 import { Post } from '@entities/post';
 
 @InputType()
-export class CreatePostInput implements Pick<Post, 'title' | 'content'> {
+export class PostInput implements Pick<Post, 'title' | 'content'> {
   @Field()
   @IsString()
   @IsNotEmpty()

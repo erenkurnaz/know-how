@@ -1,1 +1,1 @@
-export * from './create-post-input';
+export * from './post-input';

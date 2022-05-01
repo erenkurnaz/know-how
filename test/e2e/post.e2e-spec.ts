@@ -5,6 +5,7 @@ import {
   GqlBuilder,
   IUser,
   POST_BY_USER_ID_QUERY,
+  UPDATE_POST_MUTATION,
 } from '../utils/graphql';
 import { clearDatabase } from '../utils/helpers/app.helper';
 import { authorizeUser } from '../utils/helpers/auth.helper';
@@ -79,7 +80,29 @@ describe('Post', () => {
     expect(post).toMatchObject(CREATED_POST);
   });
 
-  it.todo('should update and return updated post');
+  it('should update and return updated post', async () => {
+    const { data: POST } = await new GqlBuilder<IPost>()
+      .setQuery(CREATE_POST_MUTATION)
+      .setVariables({ input: { title: 'title', content: 'content' } })
+      .withAuthentication(ACCESS_TOKEN)
+      .execute();
+
+    const { data: updatedPost } = await new GqlBuilder<IPost>()
+      .setQuery(UPDATE_POST_MUTATION)
+      .setVariables({
+        id: POST.id,
+        input: { title: 'new_title', content: 'new_content' },
+      })
+      .withAuthentication(ACCESS_TOKEN)
+      .execute();
+
+    expect(updatedPost).toEqual({
+      ...POST,
+      title: 'new_title',
+      content: 'new_content',
+      updatedAt: expect.any(String),
+    });
+  });
 
   it.todo('should delete and return success status');
 });

@@ -4,7 +4,7 @@ import { Post } from '@entities/post';
 import { CurrentUser, Public } from '@api/decorators';
 import { User } from '@entities/user';
 import { PostService } from './post.service';
-import { CreatePostInput } from './dto';
+import { PostInput } from './dto';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -13,9 +13,18 @@ export class PostResolver {
   @Mutation(() => Post)
   async createPost(
     @CurrentUser() user: User,
-    @Args('input') postDto: CreatePostInput,
+    @Args('input') postDto: PostInput,
   ): Promise<Post> {
     return await this.postService.create(user, postDto);
+  }
+
+  @Mutation(() => Post)
+  async updatePost(
+    @CurrentUser('id') userId: string,
+    @Args('id') id: string,
+    @Args('input') postDto: PostInput,
+  ): Promise<Post> {
+    return await this.postService.update(id, postDto, userId);
   }
 
   @Public()
@@ -26,13 +35,13 @@ export class PostResolver {
 
   @Public()
   @Query(() => [Post])
-  async postsByUserId(@Args('userId') userId: string): Promise<Post[]> {
-    return await this.postService.findByUserId(userId);
+  async posts(): Promise<Post[]> {
+    return await this.postService.findAll();
   }
 
   @Public()
   @Query(() => [Post])
-  async posts(): Promise<Post[]> {
-    return await this.postService.findAll();
+  async postsByUserId(@Args('userId') userId: string): Promise<Post[]> {
+    return await this.postService.findByUserId(userId);
   }
 }
