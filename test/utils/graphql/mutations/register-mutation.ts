@@ -20,7 +20,9 @@ export const REGISTER_MUTATION = {
 };
 
 export interface IRegisterInput {
-  email: string;
-  password: string;
-  fullName: string;
+  input: {
+    email: string;
+    password: string;
+    fullName: string;
+  };
 }

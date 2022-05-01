@@ -15,7 +15,6 @@ export const UPDATE_USER_MUTATION = {
   `,
 };
 
-export type IUpdateUserInput = Omit<
-  IUser,
-  'id' | 'updatedAt' | 'createdAt' | 'password'
->;
+export interface IUpdateUserInput {
+  input: Omit<IUser, 'id' | 'updatedAt' | 'createdAt' | 'password'>;
+}

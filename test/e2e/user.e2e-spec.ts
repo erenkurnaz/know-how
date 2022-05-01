@@ -1,13 +1,15 @@
 import { HttpStatus } from '@nestjs/common';
-import { clearDatabase } from '../app';
+import { clearDatabase } from '../utils/helpers/app.helper';
 
 import {
-  createUserMock,
-  currentUserQuery,
-  updateUserMutation,
-} from '../helpers/user.helper';
-import { IUser, IValidationError } from '../graphql/types';
-import { authorizeUser } from '../helpers/auth.helper';
+  CURRENT_USER_QUERY,
+  UPDATE_USER_MUTATION,
+  IUser,
+  IValidationError,
+  GqlBuilder,
+} from '../utils/graphql';
+import { createUserMock } from '../utils/helpers/user.helper';
+import { authorizeUser } from '../utils/helpers/auth.helper';
 
 describe('User operations', () => {
   let USER: IUser;
@@ -21,7 +23,10 @@ describe('User operations', () => {
     it('should return authorized user', async () => {
       const authResult = await authorizeUser(USER);
 
-      const { data } = await currentUserQuery(authResult.accessToken);
+      const { data } = await new GqlBuilder()
+        .setQuery(CURRENT_USER_QUERY)
+        .withAuthentication(authResult.accessToken)
+        .execute();
 
       expect(data).toMatchObject(authResult.user);
     });
@@ -40,10 +45,20 @@ describe('User operations', () => {
         instagram: 'new instagram',
       };
 
-      const result = await updateUserMutation(
-        updatedUser,
-        authResult.accessToken,
-      );
+      const result = await new GqlBuilder()
+        .setQuery(UPDATE_USER_MUTATION)
+        .setVariables({
+          input: {
+            email: updatedUser.email,
+            fullName: updatedUser.fullName,
+            github: updatedUser.github,
+            linkedin: updatedUser.linkedin,
+            twitter: updatedUser.twitter,
+            instagram: updatedUser.instagram,
+          },
+        })
+        .withAuthentication(authResult.accessToken)
+        .execute();
       const user = result.data as IUser;
 
       expect(user).toEqual({
@@ -59,10 +74,20 @@ describe('User operations', () => {
         email: 'invalid_email',
       };
 
-      const result = await updateUserMutation(
-        updatedUser,
-        authResult.accessToken,
-      );
+      const result = await new GqlBuilder()
+        .setQuery(UPDATE_USER_MUTATION)
+        .setVariables({
+          input: {
+            email: updatedUser.email,
+            fullName: updatedUser.fullName,
+            github: updatedUser.github,
+            linkedin: updatedUser.linkedin,
+            twitter: updatedUser.twitter,
+            instagram: updatedUser.instagram,
+          },
+        })
+        .withAuthentication(authResult.accessToken)
+        .execute();
       const error = result.data as IValidationError;
 
       expect(error.name).toEqual('ValidationException');

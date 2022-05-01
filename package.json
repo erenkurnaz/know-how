@@ -20,7 +20,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand --forceExit",
-    "test:e2e": "node --expose-gc ./node_modules/.bin/jest --config ./test/e2e/jest-e2e.json --logHeapUsage --runInBand --verbose --passWithNoTests --forceExit --detectOpenHandles"
+    "test:e2e": "node --expose-gc ./node_modules/.bin/jest --config test/jest-e2e.json --logHeapUsage --runInBand --verbose --passWithNoTests --forceExit --detectOpenHandles"
   },
   "dependencies": {
     "@mikro-orm/core": "^5.1.2",
@@ -28,7 +28,6 @@
     "@mikro-orm/nestjs": "^5.0.1",
     "@mikro-orm/postgresql": "^5.1.2",
     "@mikro-orm/reflection": "^5.1.2",
-    "@nestjs/cli": "^8.0.0",
     "@nestjs/apollo": "^10.0.9",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.0.0",
@@ -53,6 +52,7 @@
     "@faker-js/faker": "^6.2.0",
     "@mikro-orm/cli": "^5.1.2",
     "@mikro-orm/seeder": "^5.1.2",
+    "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/bcrypt": "^5.0.0",

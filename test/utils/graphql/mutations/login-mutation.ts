@@ -20,6 +20,8 @@ export const LOGIN_MUTATION = {
 };
 
 export interface ILoginInput {
-  email: string;
-  password: string;
+  input: {
+    email: string;
+    password: string;
+  };
 }
