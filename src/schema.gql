@@ -28,8 +28,18 @@ type Mutation {
   updateUser(input: UpdateUserInput!): ErrorableUserResult!
 }
 
+type Post {
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  owner: User!
+  title: String!
+  updatedAt: DateTime
+}
+
 type Query {
   currentUser: User!
+  posts: [Post!]!
   refreshAccessToken: RefreshResult!
 }
 
