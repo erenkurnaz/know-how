@@ -10,8 +10,8 @@ export abstract class BaseEntity {
   id = v4();
 
   @Field(() => Date)
-  @Property()
-  createdAt: Date = new Date();
+  @Property({ default: 'now()' })
+  createdAt: Date;
 
   @Field(() => Date, { nullable: true })
   @Property({

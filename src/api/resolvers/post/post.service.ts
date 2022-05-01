@@ -21,4 +21,8 @@ export class PostService {
 
     return post;
   }
+
+  async findById(id: string): Promise<Post> {
+    return this.postRepository.findOneOrFail({ id }, { populate: ['owner'] });
+  }
 }

@@ -19,6 +19,12 @@ export class PostResolver {
   }
 
   @Public()
+  @Query(() => Post)
+  async post(@Args('id') id: string) {
+    return await this.postService.findById(id);
+  }
+
+  @Public()
   @Query(() => [Post])
   async posts(): Promise<Post[]> {
     return await this.postService.findAll();

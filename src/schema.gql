@@ -45,6 +45,7 @@ type Post {
 
 type Query {
   currentUser: User!
+  post(id: String!): Post!
   posts: [Post!]!
   refreshAccessToken: RefreshResult!
 }

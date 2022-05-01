@@ -1,6 +1,7 @@
 import {
   POSTS_QUERY,
   CREATE_POST_MUTATION,
+  POST_QUERY,
   GqlBuilder,
   IUser,
 } from '../utils/graphql';
@@ -44,7 +45,25 @@ describe('Post', () => {
 
   it.todo('should return posts by userId');
 
-  it.todo('should return post by id');
+  it('should return post by id', async () => {
+    const { data: CREATED_POST } = await new GqlBuilder<IPost>()
+      .setQuery(CREATE_POST_MUTATION)
+      .setVariables({
+        input: {
+          title: 'title',
+          content: 'content',
+        },
+      })
+      .withAuthentication(ACCESS_TOKEN)
+      .execute();
+
+    const { data: post } = await new GqlBuilder<IPost>()
+      .setQuery(POST_QUERY)
+      .setVariables({ id: CREATED_POST.id })
+      .execute();
+
+    expect(post).toMatchObject(CREATED_POST);
+  });
 
   it.todo('should update and return updated post');
 
