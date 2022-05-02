@@ -1,4 +1,4 @@
-import { POST_FRAGMENT } from '../types/post-type';
+import { IPostInput, POST_FRAGMENT } from '../types/post-type';
 
 export const UPDATE_POST_MUTATION = {
   name: 'updatePost',
@@ -11,3 +11,8 @@ export const UPDATE_POST_MUTATION = {
     ${POST_FRAGMENT}
   `,
 };
+
+export interface IUpdatePostInput {
+  id: string;
+  input: IPostInput;
+}

@@ -1,4 +1,4 @@
-import { IUser, USER_FRAGMENT } from '../types';
+import { USER_FRAGMENT } from '../types';
 
 export const REFRESH_ACCESS_TOKEN_QUERY = {
   name: 'refreshAccessToken',
@@ -14,8 +14,3 @@ export const REFRESH_ACCESS_TOKEN_QUERY = {
     ${USER_FRAGMENT}
   `,
 };
-
-export interface IRefreshResult {
-  user: IUser;
-  accessToken: string;
-}

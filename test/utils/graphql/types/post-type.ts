@@ -9,9 +9,7 @@ export interface IPost {
   updatedAt: string;
 }
 
-export interface IPostInput {
-  input: Pick<IPost, 'title' | 'content'>;
-}
+export type IPostInput = Pick<IPost, 'title' | 'content'>;
 
 export const POST_FRAGMENT = `
   fragment PostFields on Post {

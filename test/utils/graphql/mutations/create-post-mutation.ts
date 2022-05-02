@@ -1,4 +1,4 @@
-import { POST_FRAGMENT } from '../types/post-type';
+import { IPost, POST_FRAGMENT } from '../types/post-type';
 
 export const CREATE_POST_MUTATION = {
   name: 'createPost',
@@ -11,3 +11,5 @@ export const CREATE_POST_MUTATION = {
     ${POST_FRAGMENT}
   `,
 };
+
+export type ICreatePostInput = { input: Pick<IPost, 'title' | 'content'> };

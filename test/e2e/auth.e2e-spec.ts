@@ -6,9 +6,6 @@ import {
   IUser,
   IServerError,
   IValidationError,
-  IRegisterInput,
-  LOGIN_MUTATION,
-  REGISTER_MUTATION,
   GqlBuilder,
 } from '../utils/graphql';
 import { authorizeUser } from '../utils/helpers/auth.helper';
@@ -25,8 +22,7 @@ describe('User authentication', () => {
   describe('when user register', () => {
     it('should register successfully', async () => {
       const response = await new GqlBuilder()
-        .setQuery(REGISTER_MUTATION)
-        .setVariables({
+        .setMutation('REGISTER_MUTATION', {
           input: {
             email: USER.email,
             password: USER.password,
@@ -47,8 +43,7 @@ describe('User authentication', () => {
       });
 
       const response = await new GqlBuilder()
-        .setQuery(REGISTER_MUTATION)
-        .setVariables({
+        .setMutation('REGISTER_MUTATION', {
           input: {
             email: user.email,
             password: user.password,
@@ -69,8 +64,7 @@ describe('User authentication', () => {
       const user = createUserMock({ email: 'invalid_email' });
 
       const response = await new GqlBuilder()
-        .setQuery(REGISTER_MUTATION)
-        .setVariables({
+        .setMutation('REGISTER_MUTATION', {
           input: {
             email: user.email,
             password: user.password,
@@ -87,8 +81,7 @@ describe('User authentication', () => {
       const user = createUserMock({ password: 'inv_pwd' });
 
       const response = await new GqlBuilder()
-        .setQuery(REGISTER_MUTATION)
-        .setVariables({
+        .setMutation('REGISTER_MUTATION', {
           input: {
             email: user.email,
             password: user.password,
@@ -107,8 +100,7 @@ describe('User authentication', () => {
       await authorizeUser(USER);
 
       const response = await new GqlBuilder()
-        .setQuery(LOGIN_MUTATION)
-        .setVariables({
+        .setMutation('LOGIN_MUTATION', {
           input: {
             email: USER.email,
             password: USER.password,
@@ -124,8 +116,7 @@ describe('User authentication', () => {
       await authorizeUser(USER);
 
       const response = await new GqlBuilder()
-        .setQuery(LOGIN_MUTATION)
-        .setVariables({
+        .setMutation('LOGIN_MUTATION', {
           input: {
             email: 'incorrect@mail.com',
             password: USER.password,
@@ -145,8 +136,7 @@ describe('User authentication', () => {
       await authorizeUser(USER);
 
       const response = await new GqlBuilder()
-        .setQuery(LOGIN_MUTATION)
-        .setVariables({
+        .setMutation('LOGIN_MUTATION', {
           input: {
             email: USER.email,
             password: 'inv_pwd',
@@ -164,10 +154,7 @@ describe('User authentication', () => {
   });
 });
 
-const validationErrorExpects = (
-  error: IValidationError,
-  field: keyof IRegisterInput['input'],
-) => {
+const validationErrorExpects = (error: IValidationError, field: string) => {
   expect(error.name).toEqual('ValidationException');
   expect(error.status).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
 

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { wrap } from '@mikro-orm/core';
+
 import { Post, PostRepository } from '@entities/post';
 import { User, UserRepository } from '@entities/user';
 import { PostInput } from './dto';
-import { UserNotFoundException } from '@api/resolvers/auth/errors';
-import { wrap } from '@mikro-orm/core';
 
 @Injectable()
 export class PostService {
@@ -46,8 +46,7 @@ export class PostService {
   }
 
   async findByUserId(userId: string): Promise<Post[]> {
-    const owner = await this.userRepository.findOne({ id: userId });
-    if (!owner) throw new UserNotFoundException();
+    const owner = await this.userRepository.findOneOrFail({ id: userId });
 
     return await this.postRepository.find({ owner }, { populate: ['owner'] });
   }

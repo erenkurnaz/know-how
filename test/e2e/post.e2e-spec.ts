@@ -1,12 +1,4 @@
-import {
-  POSTS_QUERY,
-  CREATE_POST_MUTATION,
-  POST_QUERY,
-  GqlBuilder,
-  IUser,
-  POST_BY_USER_ID_QUERY,
-  UPDATE_POST_MUTATION,
-} from '../utils/graphql';
+import { GqlBuilder, IUser } from '../utils/graphql';
 import { clearDatabase } from '../utils/helpers/app.helper';
 import { authorizeUser } from '../utils/helpers/auth.helper';
 import { createUserMock } from '../utils/helpers/user.helper';
@@ -24,8 +16,7 @@ describe('Post', () => {
 
   it('should create and return updated post', async () => {
     const res = await new GqlBuilder<IPost>()
-      .setQuery(CREATE_POST_MUTATION)
-      .setVariables({
+      .setMutation('CREATE_POST_MUTATION', {
         input: {
           title: 'title',
           content: 'content',
@@ -40,21 +31,23 @@ describe('Post', () => {
   });
 
   it('should return all posts', async () => {
-    const { data } = await new GqlBuilder().setQuery(POSTS_QUERY).execute();
+    const { data } = await new GqlBuilder()
+      .setQuery('POSTS_QUERY', null)
+      .execute();
 
     expect(data).toEqual([]);
   });
 
   it('should return posts by userId', async () => {
     const { data: USER_POST } = await new GqlBuilder()
-      .setQuery(CREATE_POST_MUTATION)
-      .setVariables({ input: { title: 'title', content: 'content' } })
+      .setMutation('CREATE_POST_MUTATION', {
+        input: { title: 'title', content: 'content' },
+      })
       .withAuthentication(ACCESS_TOKEN)
       .execute();
 
     const { data: posts } = await new GqlBuilder<IPost[]>()
-      .setQuery(POST_BY_USER_ID_QUERY)
-      .setVariables({ userId: USER.id })
+      .setQuery('POSTS_BY_USER_ID_QUERY', { userId: USER.id })
       .execute();
 
     expect(posts).toEqual([USER_POST]);
@@ -62,8 +55,7 @@ describe('Post', () => {
 
   it('should return post by id', async () => {
     const { data: CREATED_POST } = await new GqlBuilder<IPost>()
-      .setQuery(CREATE_POST_MUTATION)
-      .setVariables({
+      .setMutation('CREATE_POST_MUTATION', {
         input: {
           title: 'title',
           content: 'content',
@@ -73,8 +65,7 @@ describe('Post', () => {
       .execute();
 
     const { data: post } = await new GqlBuilder<IPost>()
-      .setQuery(POST_QUERY)
-      .setVariables({ id: CREATED_POST.id })
+      .setQuery('POST_QUERY', { id: CREATED_POST.id })
       .execute();
 
     expect(post).toMatchObject(CREATED_POST);
@@ -82,14 +73,14 @@ describe('Post', () => {
 
   it('should update and return updated post', async () => {
     const { data: POST } = await new GqlBuilder<IPost>()
-      .setQuery(CREATE_POST_MUTATION)
-      .setVariables({ input: { title: 'title', content: 'content' } })
+      .setMutation('CREATE_POST_MUTATION', {
+        input: { title: 'title', content: 'content' },
+      })
       .withAuthentication(ACCESS_TOKEN)
       .execute();
 
     const { data: updatedPost } = await new GqlBuilder<IPost>()
-      .setQuery(UPDATE_POST_MUTATION)
-      .setVariables({
+      .setMutation('UPDATE_POST_MUTATION', {
         id: POST.id,
         input: { title: 'new_title', content: 'new_content' },
       })
