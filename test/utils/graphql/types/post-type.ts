@@ -8,7 +8,7 @@ export interface IPost {
   owner: IUser;
   tags: ITag[];
   createdAt: string;
-  updatedAt: string;
+  updatedAt: string | null;
 }
 
 export interface IPostInput extends Pick<IPost, 'title' | 'content'> {

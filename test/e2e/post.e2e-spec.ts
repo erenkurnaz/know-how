@@ -3,6 +3,7 @@ import { clearDatabase } from '../utils/helpers/app.helper';
 import { authorizeUser } from '../utils/helpers/auth.helper';
 import { createUserMock } from '../utils/helpers/user.helper';
 import { IPost } from '../utils/graphql/types/post-type';
+import { createPost } from '../utils/helpers/post.helper';
 
 describe('Post', () => {
   let USER: IUser;
@@ -40,46 +41,27 @@ describe('Post', () => {
   });
 
   it('should return posts by userId', async () => {
-    const { data: USER_POST } = await new GqlBuilder()
-      .setMutation('CREATE_POST_MUTATION', {
-        input: { title: 'title', content: 'content', tagIds: [] },
-      })
-      .withAuthentication(ACCESS_TOKEN)
-      .execute();
+    const POST = await createPost(ACCESS_TOKEN);
 
     const { data: posts } = await new GqlBuilder<IPost[]>()
       .setQuery('POSTS_BY_USER_ID_QUERY', { userId: USER.id })
       .execute();
 
-    expect(posts).toEqual([USER_POST]);
+    expect(posts).toEqual([POST]);
   });
 
   it('should return post by id', async () => {
-    const { data: CREATED_POST } = await new GqlBuilder<IPost>()
-      .setMutation('CREATE_POST_MUTATION', {
-        input: {
-          title: 'title',
-          content: 'content',
-          tagIds: [],
-        },
-      })
-      .withAuthentication(ACCESS_TOKEN)
-      .execute();
+    const POST = await createPost(ACCESS_TOKEN);
 
     const { data: post } = await new GqlBuilder<IPost>()
-      .setQuery('POST_QUERY', { id: CREATED_POST.id })
+      .setQuery('POST_QUERY', { id: POST.id })
       .execute();
 
-    expect(post).toMatchObject(CREATED_POST);
+    expect(post).toMatchObject(POST);
   });
 
   it('should update and return updated post', async () => {
-    const { data: POST } = await new GqlBuilder<IPost>()
-      .setMutation('CREATE_POST_MUTATION', {
-        input: { title: 'title', content: 'content', tagIds: [] },
-      })
-      .withAuthentication(ACCESS_TOKEN)
-      .execute();
+    const POST = await createPost(ACCESS_TOKEN);
 
     const { data: updatedPost } = await new GqlBuilder<IPost>()
       .setMutation('UPDATE_POST_MUTATION', {
@@ -98,12 +80,7 @@ describe('Post', () => {
   });
 
   it('should delete and return success status', async () => {
-    const { data: POST } = await new GqlBuilder<IPost>()
-      .setMutation('CREATE_POST_MUTATION', {
-        input: { title: 'title', content: 'content', tagIds: [] },
-      })
-      .withAuthentication(ACCESS_TOKEN)
-      .execute();
+    const POST = await createPost(ACCESS_TOKEN);
 
     const { data: deletedPost } = await new GqlBuilder<IPost>()
       .setMutation('DELETE_POST_MUTATION', { id: POST.id })
