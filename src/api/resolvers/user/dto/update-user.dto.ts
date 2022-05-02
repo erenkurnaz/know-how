@@ -4,7 +4,11 @@ import { User } from '@entities/user';
 
 @InputType()
 export class UpdateUserInput
-  implements Omit<User, 'password' | 'id' | 'updatedAt' | 'createdAt'>
+  implements
+    Omit<
+      User,
+      'password' | 'id' | 'updatedAt' | 'createdAt' | 'posts' | 'refreshTokens'
+    >
 {
   @Field()
   @IsString()
