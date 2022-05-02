@@ -20,6 +20,7 @@ describe('Post', () => {
         input: {
           title: 'title',
           content: 'content',
+          tagIds: [],
         },
       })
       .withAuthentication(ACCESS_TOKEN)
@@ -41,7 +42,7 @@ describe('Post', () => {
   it('should return posts by userId', async () => {
     const { data: USER_POST } = await new GqlBuilder()
       .setMutation('CREATE_POST_MUTATION', {
-        input: { title: 'title', content: 'content' },
+        input: { title: 'title', content: 'content', tagIds: [] },
       })
       .withAuthentication(ACCESS_TOKEN)
       .execute();
@@ -59,6 +60,7 @@ describe('Post', () => {
         input: {
           title: 'title',
           content: 'content',
+          tagIds: [],
         },
       })
       .withAuthentication(ACCESS_TOKEN)
@@ -74,7 +76,7 @@ describe('Post', () => {
   it('should update and return updated post', async () => {
     const { data: POST } = await new GqlBuilder<IPost>()
       .setMutation('CREATE_POST_MUTATION', {
-        input: { title: 'title', content: 'content' },
+        input: { title: 'title', content: 'content', tagIds: [] },
       })
       .withAuthentication(ACCESS_TOKEN)
       .execute();
@@ -82,7 +84,7 @@ describe('Post', () => {
     const { data: updatedPost } = await new GqlBuilder<IPost>()
       .setMutation('UPDATE_POST_MUTATION', {
         id: POST.id,
-        input: { title: 'new_title', content: 'new_content' },
+        input: { title: 'new_title', content: 'new_content', tagIds: [] },
       })
       .withAuthentication(ACCESS_TOKEN)
       .execute();
@@ -98,7 +100,7 @@ describe('Post', () => {
   it('should delete and return success status', async () => {
     const { data: POST } = await new GqlBuilder<IPost>()
       .setMutation('CREATE_POST_MUTATION', {
-        input: { title: 'title', content: 'content' },
+        input: { title: 'title', content: 'content', tagIds: [] },
       })
       .withAuthentication(ACCESS_TOKEN)
       .execute();

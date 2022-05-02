@@ -36,12 +36,14 @@ type Post {
   createdAt: DateTime!
   id: ID!
   owner: User!
+  tags: [Tag!]!
   title: String!
   updatedAt: DateTime
 }
 
 input PostInput {
   content: String!
+  tagIds: [String!]!
   title: String!
 }
 
