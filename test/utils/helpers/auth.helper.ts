@@ -1,15 +1,8 @@
-import {
-  LOGIN_MUTATION,
-  REGISTER_MUTATION,
-  IAuthResult,
-  IUser,
-  GqlBuilder,
-} from '../graphql';
+import { IAuthResult, IUser, GqlBuilder } from '../graphql';
 
 export const authorizeUser = async (user: IUser): Promise<IAuthResult> => {
   await new GqlBuilder()
-    .setQuery(REGISTER_MUTATION)
-    .setVariables({
+    .setMutation('REGISTER_MUTATION', {
       input: {
         email: user.email,
         password: user.password,
@@ -19,8 +12,7 @@ export const authorizeUser = async (user: IUser): Promise<IAuthResult> => {
     .execute();
 
   const response = await new GqlBuilder()
-    .setQuery(LOGIN_MUTATION)
-    .setVariables({
+    .setMutation('LOGIN_MUTATION', {
       input: {
         email: user.email,
         password: user.password,

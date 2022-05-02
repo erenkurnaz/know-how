@@ -26,7 +26,9 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(request: Request): Promise<User> {
+  async validate(
+    request: Request,
+  ): Promise<Omit<User, 'refreshTokens' | 'posts'>> {
     const token = request.get('authorization')?.replace('Bearer ', '');
 
     const refreshToken = await this.refreshTokenRepository.findOne(

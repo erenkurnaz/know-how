@@ -1,13 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
 import { clearDatabase } from '../utils/helpers/app.helper';
 
-import {
-  CURRENT_USER_QUERY,
-  UPDATE_USER_MUTATION,
-  IUser,
-  IValidationError,
-  GqlBuilder,
-} from '../utils/graphql';
+import { IUser, IValidationError, GqlBuilder } from '../utils/graphql';
 import { createUserMock } from '../utils/helpers/user.helper';
 import { authorizeUser } from '../utils/helpers/auth.helper';
 
@@ -24,7 +18,7 @@ describe('User operations', () => {
       const authResult = await authorizeUser(USER);
 
       const { data } = await new GqlBuilder()
-        .setQuery(CURRENT_USER_QUERY)
+        .setQuery('CURRENT_USER_QUERY', null)
         .withAuthentication(authResult.accessToken)
         .execute();
 
@@ -46,8 +40,7 @@ describe('User operations', () => {
       };
 
       const result = await new GqlBuilder()
-        .setQuery(UPDATE_USER_MUTATION)
-        .setVariables({
+        .setMutation('UPDATE_USER_MUTATION', {
           input: {
             email: updatedUser.email,
             fullName: updatedUser.fullName,
@@ -75,8 +68,7 @@ describe('User operations', () => {
       };
 
       const result = await new GqlBuilder()
-        .setQuery(UPDATE_USER_MUTATION)
-        .setVariables({
+        .setMutation('UPDATE_USER_MUTATION', {
           input: {
             email: updatedUser.email,
             fullName: updatedUser.fullName,

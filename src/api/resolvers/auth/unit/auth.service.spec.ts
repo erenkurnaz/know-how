@@ -9,6 +9,7 @@ import {
 } from '../errors';
 import { AuthService } from '../auth.service';
 import { userRepositoryMock, hashServiceMock } from './mocks';
+import { Loaded } from '@mikro-orm/core';
 
 describe('AuthService', () => {
   const HASHED_PASSWORD = 'hashed_password';
@@ -80,7 +81,9 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('should return found user', async () => {
-      mockUserRepository.findOne.mockResolvedValue(USER);
+      mockUserRepository.findOne.mockResolvedValue(
+        USER as Loaded<User, string>,
+      );
       mockHashRepository.verify.mockResolvedValue(true);
 
       const { email, fullName, password } = await authService.login({
@@ -105,7 +108,9 @@ describe('AuthService', () => {
     });
 
     it('should throw InvalidCredentialsException if password is wrong', async () => {
-      mockUserRepository.findOne.mockResolvedValue(USER);
+      mockUserRepository.findOne.mockResolvedValue(
+        USER as Loaded<User, string>,
+      );
       mockHashRepository.verify.mockResolvedValue(false);
 
       await expect(

@@ -23,13 +23,33 @@ input LoginInput {
 }
 
 type Mutation {
+  createPost(input: PostInput!): Post!
+  deletePost(id: String!): Post!
   login(input: LoginInput!): ErrorableAuthResult!
   register(input: RegisterInput!): ErrorableAuthResult!
+  updatePost(id: String!, input: PostInput!): Post!
   updateUser(input: UpdateUserInput!): ErrorableUserResult!
+}
+
+type Post {
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  owner: User!
+  title: String!
+  updatedAt: DateTime
+}
+
+input PostInput {
+  content: String!
+  title: String!
 }
 
 type Query {
   currentUser: User!
+  post(id: String!): Post!
+  posts: [Post!]!
+  postsByUserId(userId: String!): [Post!]!
   refreshAccessToken: RefreshResult!
 }
 
