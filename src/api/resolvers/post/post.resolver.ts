@@ -1,8 +1,8 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { Post } from '@entities/post';
-import { CurrentUser, Public } from '@api/decorators';
 import { User } from '@entities/user';
+import { CurrentUser, Public } from '@api/decorators';
 import { PostService } from './post.service';
 import { PostInput } from './dto';
 

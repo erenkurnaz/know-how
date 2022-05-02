@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, Property, wrap } from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { BaseEntity } from '../base.entity';
@@ -19,4 +19,9 @@ export class Post extends BaseEntity {
   @Field(() => User)
   @ManyToOne()
   owner: User;
+
+  toJSON() {
+    this.owner = wrap<User>(this.owner).toObject() as unknown as User;
+    return this;
+  }
 }

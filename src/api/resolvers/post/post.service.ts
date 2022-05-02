@@ -13,7 +13,9 @@ export class PostService {
   ) {}
 
   async findAll(): Promise<Post[]> {
-    return await this.postRepository.findAll({ populate: ['owner'] });
+    const posts = await this.postRepository.findAll({ populate: ['owner'] });
+
+    return posts.map((post) => post.toJSON());
   }
 
   async create(user: User, postDto: PostInput): Promise<Post> {
@@ -24,7 +26,7 @@ export class PostService {
 
     await this.postRepository.persistAndFlush(post);
 
-    return post;
+    return post.toJSON();
   }
 
   async update(id: string, postDto: PostInput, userId: string): Promise<Post> {
@@ -38,7 +40,7 @@ export class PostService {
     wrap(post).assign(postDto);
     await this.postRepository.flush();
 
-    return post;
+    return post.toJSON();
   }
 
   async delete(id: string, userId: string): Promise<Post> {
@@ -48,7 +50,7 @@ export class PostService {
     });
 
     await this.postRepository.removeAndFlush(post);
-    return post;
+    return post.toJSON();
   }
 
   async findById(id: string): Promise<Post> {
@@ -57,7 +59,11 @@ export class PostService {
 
   async findByUserId(userId: string): Promise<Post[]> {
     const owner = await this.userRepository.findOneOrFail({ id: userId });
+    const posts = await this.postRepository.find(
+      { owner },
+      { populate: ['owner'] },
+    );
 
-    return await this.postRepository.find({ owner }, { populate: ['owner'] });
+    return posts.map((post) => post.toJSON());
   }
 }
