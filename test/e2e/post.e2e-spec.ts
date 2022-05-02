@@ -95,5 +95,19 @@ describe('Post', () => {
     });
   });
 
-  it.todo('should delete and return success status');
+  it('should delete and return success status', async () => {
+    const { data: POST } = await new GqlBuilder<IPost>()
+      .setMutation('CREATE_POST_MUTATION', {
+        input: { title: 'title', content: 'content' },
+      })
+      .withAuthentication(ACCESS_TOKEN)
+      .execute();
+
+    const { data: deletedPost } = await new GqlBuilder<IPost>()
+      .setMutation('DELETE_POST_MUTATION', { id: POST.id })
+      .withAuthentication(ACCESS_TOKEN)
+      .execute();
+
+    expect(deletedPost).toEqual(POST);
+  });
 });

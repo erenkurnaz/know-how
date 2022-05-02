@@ -41,6 +41,16 @@ export class PostService {
     return post;
   }
 
+  async delete(id: string, userId: string): Promise<Post> {
+    const post = await this.postRepository.findOneOrFail({
+      id,
+      owner: { id: userId },
+    });
+
+    await this.postRepository.removeAndFlush(post);
+    return post;
+  }
+
   async findById(id: string): Promise<Post> {
     return this.postRepository.findOneOrFail({ id }, { populate: ['owner'] });
   }

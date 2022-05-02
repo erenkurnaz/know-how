@@ -27,6 +27,14 @@ export class PostResolver {
     return await this.postService.update(id, postDto, userId);
   }
 
+  @Mutation(() => Post)
+  async deletePost(
+    @CurrentUser('id') userId: string,
+    @Args('id') id: string,
+  ): Promise<Post> {
+    return await this.postService.delete(id, userId);
+  }
+
   @Public()
   @Query(() => Post)
   async post(@Args('id') id: string): Promise<Post> {
