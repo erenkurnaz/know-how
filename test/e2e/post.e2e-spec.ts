@@ -10,12 +10,13 @@ describe('Post', () => {
   let ACCESS_TOKEN: string;
   beforeEach(async () => {
     await clearDatabase();
+
     const { user, accessToken } = await authorizeUser(createUserMock());
     USER = user;
     ACCESS_TOKEN = accessToken;
   });
 
-  it('should create and return updated post', async () => {
+  it('should create and return created post', async () => {
     const res = await new GqlBuilder<IPost>()
       .setMutation('CREATE_POST_MUTATION', {
         input: {

@@ -8,4 +8,13 @@ export class TagService {
   async findAll(): Promise<Tag[]> {
     return await this.tagRepository.findAll();
   }
+
+  async create(name: string) {
+    const tag = new Tag();
+    tag.name = name;
+
+    await this.tagRepository.persistAndFlush(tag);
+
+    return tag;
+  }
 }

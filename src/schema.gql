@@ -24,6 +24,7 @@ input LoginInput {
 
 type Mutation {
   createPost(input: PostInput!): Post!
+  createTag(name: String!): Tag!
   deletePost(id: String!): Post!
   login(input: LoginInput!): ErrorableAuthResult!
   register(input: RegisterInput!): ErrorableAuthResult!
