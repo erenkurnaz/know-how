@@ -13,4 +13,7 @@ export class PostInput implements Pick<Post, 'title' | 'content'> {
   @IsString()
   @IsNotEmpty()
   content: string;
+
+  @Field(() => [String])
+  tagIds: string[];
 }
