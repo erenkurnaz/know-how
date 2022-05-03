@@ -45,6 +45,20 @@ describe('Post', () => {
     expect(data).toEqual([]);
   });
 
+  it('should return posts by search keyword', async () => {
+    const [POST_1] = await Promise.all([
+      createPost(ACCESS_TOKEN),
+      createPost(ACCESS_TOKEN),
+      createPost(ACCESS_TOKEN),
+    ]);
+
+    const { data: posts } = await new GqlBuilder<IPost[]>()
+      .setQuery('POST_SEARCH_QUERY', { keyword: POST_1.content })
+      .execute();
+
+    expect(posts).toEqual([POST_1]);
+  });
+
   it('should return posts by userId', async () => {
     const POST = await createPost(ACCESS_TOKEN);
 

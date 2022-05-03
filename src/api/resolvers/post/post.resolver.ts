@@ -36,6 +36,12 @@ export class PostResolver {
   }
 
   @Public()
+  @Query(() => [Post])
+  async postSearch(@Args('keyword') keyword: string) {
+    return await this.postService.search(keyword);
+  }
+
+  @Public()
   @Query(() => Post)
   async post(@Args('id') id: string): Promise<Post> {
     return await this.postService.findById(id);
