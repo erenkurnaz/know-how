@@ -12,11 +12,12 @@ export class Tag extends BaseEntity {
   @Property()
   name: string;
 
-  @Field(() => Boolean)
-  isFavorite = false;
+  @Field(() => Boolean, { defaultValue: false })
+  isFavorite: boolean;
 
   toJSON(user?: User | null) {
     const tag = wrap<Tag>(this).toObject();
+
     if (user && user.favoriteTags.isInitialized()) {
       tag.isFavorite = user.favoriteTags.contains(this);
     } else {
