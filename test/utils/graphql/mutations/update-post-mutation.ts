@@ -1,9 +1,10 @@
 import { IPostInput, POST_FRAGMENT } from '../types/post-type';
+import { gql } from '../../helpers/app.helper';
 
 export const UPDATE_POST_MUTATION = {
   name: 'updatePost',
-  query: `
-    mutation($id: String!, $input: PostInput!) {
+  query: gql`
+    mutation ($id: String!, $input: PostInput!) {
       updatePost(id: $id, input: $input) {
         ...PostFields
       }

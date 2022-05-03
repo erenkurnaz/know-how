@@ -41,3 +41,6 @@ beforeAll(async () => {
 afterAll(async () => {
   await APP.close();
 });
+
+export const gql = (query: TemplateStringsArray, ...args: string[]) =>
+  [...query, ...args].join('');

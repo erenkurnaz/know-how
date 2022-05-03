@@ -1,4 +1,5 @@
 import { IErrorableResult } from './error-types';
+import { gql } from '../../helpers/app.helper';
 
 export interface IUser {
   id: string;
@@ -13,7 +14,7 @@ export interface IUser {
   updatedAt: string | null;
 }
 
-export const USER_FRAGMENT = `
+export const USER_FRAGMENT = gql`
   fragment UserFields on User {
     id
     email

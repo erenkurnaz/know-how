@@ -1,9 +1,10 @@
 import { TAG_FRAGMENT } from '../types/tag-type';
+import { gql } from '../../helpers/app.helper';
 
 export const CREATE_TAG_MUTATION = {
   name: 'createTag',
-  query: `
-    mutation($name: String!) {
+  query: gql`
+    mutation ($name: String!) {
       createTag(name: $name) {
         ...TagFields
       }

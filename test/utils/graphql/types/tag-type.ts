@@ -1,3 +1,5 @@
+import { gql } from '../../helpers/app.helper';
+
 export interface ITag {
   id: string;
   name: string;
@@ -5,7 +7,7 @@ export interface ITag {
   updatedAt: string;
 }
 
-export const TAG_FRAGMENT = `
+export const TAG_FRAGMENT = gql`
   fragment TagFields on Tag {
     id
     name

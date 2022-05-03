@@ -1,5 +1,3 @@
-import * as QUERIES from './index';
-
 interface QueryInputs {
   POST_QUERY: {
     id: string;
