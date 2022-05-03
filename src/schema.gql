@@ -51,6 +51,7 @@ input PostInput {
 type Query {
   currentUser: User!
   post(id: String!): Post!
+  postSearch(keyword: String!): [Post!]!
   posts: [Post!]!
   postsByUserId(userId: String!): [Post!]!
   refreshAccessToken: RefreshResult!
