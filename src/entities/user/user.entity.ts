@@ -1,10 +1,17 @@
-import { Collection, Entity, OneToMany, Property } from '@mikro-orm/core';
+import {
+  Collection,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  Property,
+} from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { BaseEntity } from '../base.entity';
 import { UserRepository } from './user.repository';
 import { Post } from '@entities/post';
 import { RefreshToken } from '@entities/refresh-token';
+import { Tag } from '@entities/tag';
 
 @ObjectType()
 @Entity({ customRepository: () => UserRepository })
@@ -25,6 +32,10 @@ export class User extends BaseEntity {
 
   @OneToMany(() => RefreshToken, (token) => token.user, { hidden: true })
   refreshTokens = new Collection<RefreshToken>(this);
+
+  @Field(() => [Tag])
+  @ManyToMany(() => Tag)
+  favoriteTags = new Collection<Tag>(this);
 
   @Field({ nullable: true })
   @Property({ nullable: true })

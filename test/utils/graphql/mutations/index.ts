@@ -5,3 +5,4 @@ export { CREATE_POST_MUTATION } from './create-post-mutation';
 export { UPDATE_POST_MUTATION } from './update-post-mutation';
 export { DELETE_POST_MUTATION } from './delete-post-mutation';
 export { CREATE_TAG_MUTATION } from './create-tag-mutation';
+export { FAVORITE_TAG_MUTATION } from './favorite-tag-mutation';

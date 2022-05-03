@@ -26,6 +26,7 @@ type Mutation {
   createPost(input: PostInput!): Post!
   createTag(name: String!): Tag!
   deletePost(id: String!): Post!
+  favoriteTag(id: String!): Tag!
   login(input: LoginInput!): ErrorableAuthResult!
   register(input: RegisterInput!): ErrorableAuthResult!
   updatePost(id: String!, input: PostInput!): Post!
@@ -78,6 +79,7 @@ type ServerError {
 type Tag {
   createdAt: DateTime!
   id: ID!
+  isFavorite: Boolean!
   name: String!
   updatedAt: DateTime
 }
@@ -94,6 +96,7 @@ input UpdateUserInput {
 type User {
   createdAt: DateTime!
   email: String!
+  favoriteTags: [Tag!]!
   fullName: String!
   github: String
   id: ID!

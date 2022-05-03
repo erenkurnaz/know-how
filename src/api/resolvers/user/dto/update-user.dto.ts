@@ -7,7 +7,13 @@ export class UpdateUserInput
   implements
     Omit<
       User,
-      'password' | 'id' | 'updatedAt' | 'createdAt' | 'posts' | 'refreshTokens'
+      | 'password'
+      | 'id'
+      | 'updatedAt'
+      | 'createdAt'
+      | 'posts'
+      | 'refreshTokens'
+      | 'favoriteTags'
     >
 {
   @Field()
