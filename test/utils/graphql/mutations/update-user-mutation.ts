@@ -1,17 +1,30 @@
-import { IUser, USER_FRAGMENT, ON_ERRORABLE_RESULT } from '../types';
+import {
+  IUser,
+  USER_FRAGMENT,
+  VALIDATION_ERROR_FRAGMENT,
+  SERVER_ERROR_FRAGMENT,
+} from '../types';
+import { gql } from '../../helpers/app.helper';
 
 export const UPDATE_USER_MUTATION = {
   name: 'updateUser',
-  query: `
-    mutation($input: UpdateUserInput!) {
+  query: gql`
+    mutation ($input: UpdateUserInput!) {
       updateUser(input: $input) {
-        ...on User {
+        ... on User {
           ...UserFields
         }
-        ${ON_ERRORABLE_RESULT}
+        ... on ValidationError {
+          ...ValidationErrorFields
+        }
+        ... on ServerError {
+          ...ServerErrorFields
+        }
       }
     }
     ${USER_FRAGMENT}
+    ${VALIDATION_ERROR_FRAGMENT}
+    ${SERVER_ERROR_FRAGMENT}
   `,
 };
 

@@ -1,3 +1,5 @@
+import { gql } from '../../helpers/app.helper';
+
 interface IValidationErrorField {
   field: string;
   message: string;
@@ -18,17 +20,19 @@ export interface IServerError {
 
 export type IErrorableResult<T> = T | IValidationError | IServerError;
 
-export const ON_ERRORABLE_RESULT = `
-  ... on ValidationError {
+export const VALIDATION_ERROR_FRAGMENT = gql`
+  fragment ValidationErrorFields on ValidationError {
     fields {
       field
       message
     }
-    name
-    message
     status
+    name
   }
-  ... on ServerError {
+`;
+
+export const SERVER_ERROR_FRAGMENT = gql`
+  fragment ServerErrorFields on ServerError {
     name
     message
     status

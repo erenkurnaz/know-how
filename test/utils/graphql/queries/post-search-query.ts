@@ -1,11 +1,11 @@
 import { POST_FRAGMENT } from '../types/post-type';
 import { gql } from '../../helpers/app.helper';
 
-export const POSTS_QUERY = {
-  name: 'posts',
+export const POST_SEARCH_QUERY = {
+  name: 'postSearch',
   query: gql`
-    query {
-      posts {
+    query ($keyword: String!) {
+      postSearch(keyword: $keyword) {
         ...PostFields
       }
     }

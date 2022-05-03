@@ -79,4 +79,13 @@ export class PostService {
 
     return posts.map((post) => post.toJSON());
   }
+
+  async search(keyword: string): Promise<Post[]> {
+    return await this.postRepository.find(
+      {
+        $or: [{ title: { $ilike: keyword } }, { content: { $ilike: keyword } }],
+      },
+      { populate: ['owner', 'tags'] },
+    );
+  }
 }

@@ -1,9 +1,14 @@
-import { USER_FRAGMENT, ON_ERRORABLE_RESULT } from '../types';
+import {
+  USER_FRAGMENT,
+  SERVER_ERROR_FRAGMENT,
+  VALIDATION_ERROR_FRAGMENT,
+} from '../types';
+import { gql } from '../../helpers/app.helper';
 
 export const LOGIN_MUTATION = {
   name: 'login',
-  query: `
-    mutation($input: LoginInput!) {
+  query: gql`
+    mutation ($input: LoginInput!) {
       login(input: $input) {
         ... on AuthResult {
           user {
@@ -12,10 +17,17 @@ export const LOGIN_MUTATION = {
           accessToken
           refreshToken
         }
-        ${ON_ERRORABLE_RESULT}
+        ... on ValidationError {
+          ...ValidationErrorFields
+        }
+        ... on ServerError {
+          ...ServerErrorFields
+        }
       }
     }
     ${USER_FRAGMENT}
+    ${VALIDATION_ERROR_FRAGMENT}
+    ${SERVER_ERROR_FRAGMENT}
   `,
 };
 

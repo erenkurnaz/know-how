@@ -1,5 +1,6 @@
 import { IUser, USER_FRAGMENT } from './user-type';
 import { ITag, TAG_FRAGMENT } from './tag-type';
+import { gql } from '../../helpers/app.helper';
 
 export interface IPost {
   id: string;
@@ -15,7 +16,7 @@ export interface IPostInput extends Pick<IPost, 'title' | 'content'> {
   tagIds: string[];
 }
 
-export const POST_FRAGMENT = `
+export const POST_FRAGMENT = gql`
   fragment PostFields on Post {
     id
     title
