@@ -6,6 +6,7 @@ import { IUpdatePostInput } from './update-post-mutation';
 import { IDeletePostInput } from './delete-post-mutation';
 import { ICreateTagInput } from './create-tag-mutation';
 import { IFavoriteTagInput } from './favorite-tag-mutation';
+import { IUnfavoriteTagInput } from './unfavorite-tag-mutation';
 
 interface InputTypes {
   REGISTER_MUTATION: IRegisterInput;
@@ -16,6 +17,7 @@ interface InputTypes {
   DELETE_POST_MUTATION: IDeletePostInput;
   CREATE_TAG_MUTATION: ICreateTagInput;
   FAVORITE_TAG_MUTATION: IFavoriteTagInput;
+  UNFAVORITE_TAG_MUTATION: IUnfavoriteTagInput;
 }
 
 export type MutationInput<M> = M extends keyof InputTypes

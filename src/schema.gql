@@ -29,6 +29,7 @@ type Mutation {
   favoriteTag(id: String!): Tag!
   login(input: LoginInput!): ErrorableAuthResult!
   register(input: RegisterInput!): ErrorableAuthResult!
+  unfavoriteTag(id: String!): Tag!
   updatePost(id: String!, input: PostInput!): Post!
   updateUser(input: UpdateUserInput!): ErrorableUserResult!
 }

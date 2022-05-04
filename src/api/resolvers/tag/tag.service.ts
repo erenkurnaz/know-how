@@ -46,4 +46,16 @@ export class TagService {
       { populate: ['favoriteTags'] },
     );
   }
+
+  async removeFromFavorite(id: string, userId: string) {
+    const user = await this.getUser(userId);
+    if (!user) throw new UserNotFoundException();
+
+    const tag = await this.tagRepository.findOneOrFail({ id });
+
+    user.favoriteTags.remove(tag);
+    await this.userRepository.persistAndFlush(user);
+
+    return tag.toJSON(user);
+  }
 }

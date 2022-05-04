@@ -25,6 +25,14 @@ export class TagResolver {
     return await this.tagService.addToFavorite(id, userId);
   }
 
+  @Mutation(() => Tag)
+  async unfavoriteTag(
+    @CurrentUser('id') userId: string,
+    @Args('id') id: string,
+  ): Promise<Tag> {
+    return await this.tagService.removeFromFavorite(id, userId);
+  }
+
   @Public()
   @Query(() => [Tag])
   async tags(@CurrentUser('id') userId: string | undefined): Promise<Tag[]> {

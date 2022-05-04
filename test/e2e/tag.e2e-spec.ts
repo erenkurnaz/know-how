@@ -7,28 +7,51 @@ import { createTag } from '../utils/helpers/tag.helper';
 
 describe('Tags', () => {
   let ACCESS_TOKEN: string;
+  let INITIAL_TAG: ITag;
+
   beforeEach(async () => {
     await clearDatabase();
 
     const { accessToken } = await authorizeUser(createUserMock());
     ACCESS_TOKEN = accessToken;
+
+    INITIAL_TAG = await createTag(ACCESS_TOKEN);
   });
 
   describe('when user add tag to favorite', () => {
-    it('should return tag as favorited', async () => {
-      const CREATED_TAG = await createTag(ACCESS_TOKEN);
-
+    it('should return favorited tag', async () => {
       const { data: favoriteTag } = await new GqlBuilder<ITag>()
         .setMutation('FAVORITE_TAG_MUTATION', {
-          id: CREATED_TAG.id,
+          id: INITIAL_TAG.id,
         })
         .withAuthentication(ACCESS_TOKEN)
         .execute();
 
       expect(favoriteTag).toEqual({
-        ...CREATED_TAG,
+        ...INITIAL_TAG,
         isFavorite: true,
       });
+    });
+  });
+
+  describe('when user remove tag from favorite', () => {
+    it('should return unfavorited tag', async () => {
+      const { data: FAVORITED_TAG } = await new GqlBuilder<ITag>()
+        .setMutation('FAVORITE_TAG_MUTATION', {
+          id: INITIAL_TAG.id,
+        })
+        .withAuthentication(ACCESS_TOKEN)
+        .execute();
+
+      const { data: unfavoritedTag } = await new GqlBuilder<ITag>()
+        .setMutation('UNFAVORITE_TAG_MUTATION', {
+          id: FAVORITED_TAG.id,
+        })
+        .withAuthentication(ACCESS_TOKEN)
+        .execute();
+
+      expect(FAVORITED_TAG.isFavorite).toEqual(true);
+      expect(unfavoritedTag.isFavorite).toEqual(false);
     });
   });
 
@@ -56,6 +79,6 @@ describe('Tags', () => {
       .setQuery('TAGS_QUERY', null)
       .execute();
 
-    expect(tags).toEqual([TAG]);
+    expect(tags).toEqual([INITIAL_TAG, TAG]);
   });
 });
