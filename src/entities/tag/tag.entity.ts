@@ -17,12 +17,11 @@ export class Tag extends BaseEntity {
 
   toJSON(user?: User | null) {
     const tag = wrap<Tag>(this).toObject();
+    tag.isFavorite =
+      user && user.favoriteTags.isInitialized()
+        ? user.favoriteTags.contains(this)
+        : false;
 
-    if (user && user.favoriteTags.isInitialized()) {
-      tag.isFavorite = user.favoriteTags.contains(this);
-    } else {
-      tag.isFavorite = false;
-    }
     return tag as Tag;
   }
 }

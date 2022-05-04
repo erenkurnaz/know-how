@@ -6,6 +6,7 @@ export interface IUser {
   email: string;
   password: string;
   fullName: string;
+  isFollowing?: boolean | null;
   github?: string | null;
   linkedin?: string | null;
   twitter?: string | null;
@@ -19,6 +20,7 @@ export const USER_FRAGMENT = gql`
     id
     email
     fullName
+    isFollowing
     github
     linkedin
     twitter
