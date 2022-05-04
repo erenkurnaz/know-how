@@ -12,7 +12,6 @@ import { UserResolver, UserService } from './resolvers/user';
 import { AuthResolver, AuthService } from './resolvers/auth';
 import { PostResolver, PostService } from './resolvers/post';
 import { TagResolver, TagService } from './resolvers/tag';
-
 @Module({
   imports: [SecurityModule, UserModule, PostModule, TagModule],
   providers: [
