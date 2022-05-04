@@ -165,15 +165,6 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
-        },
-        "wtf": {
-          "name": "wtf",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
         }
       },
       "name": "tag",
@@ -187,25 +178,6 @@
           "keyName": "tag_name_unique",
           "primary": false,
           "unique": true
-        },
-        {
-          "columnNames": [
-            "wtf"
-          ],
-          "composite": false,
-          "keyName": "tag_wtf_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "tag_name_index",
-          "columnNames": [
-            "name"
-          ],
-          "composite": false,
-          "primary": false,
-          "unique": false,
-          "expression": "create index \"tag_name_index\" on \"tag\" (\"name\")"
         },
         {
           "keyName": "tag_name_unique",
@@ -444,8 +416,7 @@
           ],
           "composite": true,
           "primary": false,
-          "unique": false,
-          "expression": "create index \"post_content_title_index\" on \"post\" (\"content\",\"title\");"
+          "unique": false
         },
         {
           "keyName": "post_pkey",
