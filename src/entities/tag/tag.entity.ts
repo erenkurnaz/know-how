@@ -1,4 +1,4 @@
-import { Entity, Property, wrap } from '@mikro-orm/core';
+import { Entity, Index, Property, Unique, wrap } from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { BaseEntity } from '../base.entity';
@@ -9,7 +9,8 @@ import { TagRepository } from './tag.repository';
 @Entity({ customRepository: () => TagRepository })
 export class Tag extends BaseEntity {
   @Field()
-  @Property()
+  @Property({ unique: true })
+  @Unique()
   name: string;
 
   @Field(() => Boolean, { defaultValue: false })
