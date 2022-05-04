@@ -1,6 +1,7 @@
 import {
   Collection,
   Entity,
+  Index,
   ManyToMany,
   ManyToOne,
   Property,
@@ -15,6 +16,9 @@ import { Tag } from '@entities/tag/tag.entity';
 
 @ObjectType()
 @Entity({ customRepository: () => PostRepository })
+@Index({
+  properties: ['content', 'title'],
+})
 export class Post extends BaseEntity {
   @Field()
   @Property()
