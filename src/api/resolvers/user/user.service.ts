@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { User, UserRepository } from '@entities/user';
 import { UserNotFoundException } from '@api/resolvers/auth/errors';
 import { wrap } from '@mikro-orm/core';
@@ -22,5 +22,24 @@ export class UserService {
     await this.userRepository.flush();
 
     return foundUser;
+  }
+
+  async follow(followerId: string, followingId: string) {
+    if (followerId === followingId) throw new BadRequestException();
+
+    const [follower, following] = await Promise.all([
+      this.userRepository.findOneOrFail(
+        { id: followerId },
+        { populate: ['followings'] },
+      ),
+      this.userRepository.findOneOrFail({
+        id: followingId,
+      }),
+    ]);
+
+    follower.followings.add(following);
+    await this.userRepository.persistAndFlush(follower);
+
+    return following.toJSON(follower);
   }
 }

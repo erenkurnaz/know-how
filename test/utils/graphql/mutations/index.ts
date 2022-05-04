@@ -7,3 +7,4 @@ export { DELETE_POST_MUTATION } from './delete-post-mutation';
 export { CREATE_TAG_MUTATION } from './create-tag-mutation';
 export { FAVORITE_TAG_MUTATION } from './favorite-tag-mutation';
 export { UNFAVORITE_TAG_MUTATION } from './unfavorite-tag-mutation';
+export { FOLLOW_USER_MUTATION } from './follow-user-mutation';

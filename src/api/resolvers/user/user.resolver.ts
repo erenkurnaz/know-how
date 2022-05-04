@@ -17,6 +17,14 @@ export class UserResolver {
     return await this.userService.update(userId, input);
   }
 
+  @Mutation(() => User)
+  async followUser(
+    @CurrentUser('id') followerId: string,
+    @Args('userId') followingId: string,
+  ) {
+    return await this.userService.follow(followerId, followingId);
+  }
+
   @Query(() => User)
   async currentUser(@CurrentUser('id') id: string): Promise<User> {
     return await this.userService.findById(id);

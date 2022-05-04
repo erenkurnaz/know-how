@@ -54,7 +54,7 @@ export class GqlBuilder<T = unknown> {
     });
 
     const errors: ApolloError = body.errors && body.errors[0];
-    if (errors) console.error(errors);
+    if (errors) console.error(JSON.stringify(errors));
 
     const data: T = body.data && body.data[this.gqlQuery.name];
 

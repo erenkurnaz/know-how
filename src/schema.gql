@@ -27,6 +27,7 @@ type Mutation {
   createTag(name: String!): Tag!
   deletePost(id: String!): Post!
   favoriteTag(id: String!): Tag!
+  followUser(userId: String!): User!
   login(input: LoginInput!): ErrorableAuthResult!
   register(input: RegisterInput!): ErrorableAuthResult!
   unfavoriteTag(id: String!): Tag!
@@ -98,10 +99,13 @@ type User {
   createdAt: DateTime!
   email: String!
   favoriteTags: [Tag!]!
+  followers: [User!]!
+  followings: [User!]!
   fullName: String!
   github: String
   id: ID!
   instagram: String
+  isFollowing: Boolean!
   linkedin: String
   twitter: String
   updatedAt: DateTime

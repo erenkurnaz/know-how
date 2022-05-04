@@ -92,4 +92,35 @@ describe('User operations', () => {
       });
     });
   });
+
+  describe('when follow user', () => {
+    it('should return followed user if not following', async () => {
+      const { user: USER_TO_FOLLOW } = await authorizeUser(createUserMock());
+      const { accessToken } = await authorizeUser(USER);
+
+      const { data: FOLLOWED_USER } = await new GqlBuilder<IUser>()
+        .setMutation('FOLLOW_USER_MUTATION', {
+          userId: USER_TO_FOLLOW.id,
+        })
+        .withAuthentication(accessToken)
+        .execute();
+
+      expect(USER_TO_FOLLOW).toEqual(FOLLOWED_USER);
+    });
+
+    it('should fail if self following', async () => {
+      const { user, accessToken } = await authorizeUser(USER);
+
+      const { data: FOLLOWED_USER, errors } = await new GqlBuilder<IUser>()
+        .setMutation('FOLLOW_USER_MUTATION', {
+          userId: user.id,
+        })
+        .withAuthentication(accessToken)
+        .execute();
+
+      expect(FOLLOWED_USER).toEqual(null);
+      expect(errors?.message).toContain('Bad Request');
+      expect(errors?.extensions.code).toEqual('500');
+    });
+  });
 });

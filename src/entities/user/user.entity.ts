@@ -4,6 +4,7 @@ import {
   ManyToMany,
   OneToMany,
   Property,
+  wrap,
 } from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
 
@@ -27,10 +28,40 @@ export class User extends BaseEntity {
   @Property()
   fullName: string;
 
-  @OneToMany(() => Post, (post) => post.owner, { hidden: true })
+  @OneToMany({
+    entity: () => Post,
+    mappedBy: (post) => post.owner,
+    hidden: true,
+  })
   posts = new Collection<Post>(this);
 
-  @OneToMany(() => RefreshToken, (token) => token.user, { hidden: true })
+  @Field(() => [User])
+  @ManyToMany({
+    entity: () => User,
+    inversedBy: (user) => user.followings,
+    joinColumn: 'follower',
+    inverseJoinColumn: 'following',
+    owner: true,
+    hidden: true,
+  })
+  followers = new Collection<User>(this);
+
+  @Field(() => [User])
+  @ManyToMany({
+    entity: () => User,
+    mappedBy: (user) => user.followers,
+    hidden: true,
+  })
+  followings = new Collection<User>(this);
+
+  @Field(() => Boolean)
+  isFollowing = false;
+
+  @OneToMany({
+    entity: () => RefreshToken,
+    mappedBy: (token) => token.user,
+    hidden: true,
+  })
   refreshTokens = new Collection<RefreshToken>(this);
 
   @Field(() => [Tag])
@@ -52,4 +83,14 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   @Property({ nullable: true })
   instagram?: string;
+
+  toJSON(follower?: User) {
+    const user = wrap<User>(this).toObject() as unknown as User;
+    user.isFollowing =
+      follower && follower.followings.isInitialized()
+        ? follower.followings.contains(this)
+        : false;
+
+    return user;
+  }
 }
