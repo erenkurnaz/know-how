@@ -8,6 +8,7 @@ import { ICreateTagInput } from './create-tag-mutation';
 import { IFavoriteTagInput } from './favorite-tag-mutation';
 import { IUnfavoriteTagInput } from './unfavorite-tag-mutation';
 import { IFollowUserInput } from './follow-user-mutation';
+import { IUnfollowUserInput } from './unfollow-user-mutation';
 
 interface InputTypes {
   REGISTER_MUTATION: IRegisterInput;
@@ -20,6 +21,7 @@ interface InputTypes {
   FAVORITE_TAG_MUTATION: IFavoriteTagInput;
   UNFAVORITE_TAG_MUTATION: IUnfavoriteTagInput;
   FOLLOW_USER_MUTATION: IFollowUserInput;
+  UNFOLLOW_USER_MUTATION: IUnfollowUserInput;
 }
 
 export type MutationInput<M> = M extends keyof InputTypes

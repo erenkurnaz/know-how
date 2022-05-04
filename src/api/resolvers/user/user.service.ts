@@ -42,4 +42,20 @@ export class UserService {
 
     return following.toJSON(follower);
   }
+
+  async unfollow(followerId: string, followingId: string) {
+    if (followerId === followingId) throw new BadRequestException();
+    const [follower, following] = await Promise.all([
+      this.userRepository.findOneOrFail(
+        { id: followerId },
+        { populate: ['followings'] },
+      ),
+      this.userRepository.findOneOrFail({ id: followingId }),
+    ]);
+
+    follower.followings.remove(following);
+    await this.userRepository.persistAndFlush(follower);
+
+    return following.toJSON(follower);
+  }
 }

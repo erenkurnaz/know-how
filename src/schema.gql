@@ -31,6 +31,7 @@ type Mutation {
   login(input: LoginInput!): ErrorableAuthResult!
   register(input: RegisterInput!): ErrorableAuthResult!
   unfavoriteTag(id: String!): Tag!
+  unfollowUser(userId: String!): User!
   updatePost(id: String!, input: PostInput!): Post!
   updateUser(input: UpdateUserInput!): ErrorableUserResult!
 }
@@ -105,7 +106,7 @@ type User {
   github: String
   id: ID!
   instagram: String
-  isFollowing: Boolean!
+  isFollowing: Boolean
   linkedin: String
   twitter: String
   updatedAt: DateTime
