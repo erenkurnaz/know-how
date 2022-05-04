@@ -5,15 +5,9 @@ import { User } from '@entities/user';
 @InputType()
 export class UpdateUserInput
   implements
-    Omit<
+    Pick<
       User,
-      | 'password'
-      | 'id'
-      | 'updatedAt'
-      | 'createdAt'
-      | 'posts'
-      | 'refreshTokens'
-      | 'favoriteTags'
+      'fullName' | 'email' | 'github' | 'instagram' | 'linkedin' | 'twitter'
     >
 {
   @Field()

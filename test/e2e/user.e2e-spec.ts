@@ -92,4 +92,61 @@ describe('User operations', () => {
       });
     });
   });
+
+  describe('when follow user', () => {
+    it('should return followed user if not following', async () => {
+      const { user: USER_TO_FOLLOW } = await authorizeUser(createUserMock());
+      const { accessToken } = await authorizeUser(USER);
+
+      const { data: FOLLOWED_USER } = await new GqlBuilder<IUser>()
+        .setMutation('FOLLOW_USER_MUTATION', {
+          userId: USER_TO_FOLLOW.id,
+        })
+        .withAuthentication(accessToken)
+        .execute();
+
+      expect(FOLLOWED_USER.id).toEqual(USER_TO_FOLLOW.id);
+      expect(FOLLOWED_USER.email).toEqual(USER_TO_FOLLOW.email);
+      expect(FOLLOWED_USER.isFollowing).toEqual(true);
+    });
+
+    it('should fail if self following', async () => {
+      const { user, accessToken } = await authorizeUser(USER);
+
+      const { data: FOLLOWED_USER, errors } = await new GqlBuilder<IUser>()
+        .setMutation('FOLLOW_USER_MUTATION', {
+          userId: user.id,
+        })
+        .withAuthentication(accessToken)
+        .execute();
+
+      expect(FOLLOWED_USER).toEqual(null);
+      expect(errors?.message).toContain('Bad Request');
+      expect(errors?.extensions.code).toEqual('500');
+    });
+  });
+
+  describe('when unfollow user', () => {
+    it('should return unfollowed user if followed', async () => {
+      const { user: FOLLOWED_USER } = await authorizeUser(createUserMock());
+      const { accessToken } = await authorizeUser(USER);
+      await new GqlBuilder<IUser>()
+        .setMutation('FOLLOW_USER_MUTATION', {
+          userId: FOLLOWED_USER.id,
+        })
+        .withAuthentication(accessToken)
+        .execute();
+
+      const { data: UNFOLLOWED_USER } = await new GqlBuilder<IUser>()
+        .setMutation('UNFOLLOW_USER_MUTATION', {
+          userId: FOLLOWED_USER.id,
+        })
+        .withAuthentication(accessToken)
+        .execute();
+
+      expect(UNFOLLOWED_USER.id).toEqual(FOLLOWED_USER.id);
+      expect(UNFOLLOWED_USER.email).toEqual(FOLLOWED_USER.email);
+      expect(UNFOLLOWED_USER.isFollowing).toEqual(false);
+    });
+  });
 });

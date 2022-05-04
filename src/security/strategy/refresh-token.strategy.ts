@@ -1,7 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { wrap } from '@mikro-orm/core';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 
@@ -28,7 +27,17 @@ export class RefreshTokenStrategy extends PassportStrategy(
 
   async validate(
     request: Request,
-  ): Promise<Omit<User, 'refreshTokens' | 'posts' | 'favoriteTags'>> {
+  ): Promise<
+    Omit<
+      User,
+      | 'refreshTokens'
+      | 'posts'
+      | 'favoriteTags'
+      | 'followers'
+      | 'followings'
+      | 'toJSON'
+    >
+  > {
     const token = request.get('authorization')?.replace('Bearer ', '');
 
     const refreshToken = await this.refreshTokenRepository.findOne(
@@ -37,6 +46,6 @@ export class RefreshTokenStrategy extends PassportStrategy(
     );
     if (!refreshToken) throw new UnauthorizedException();
 
-    return wrap(refreshToken.user).toObject();
+    return refreshToken.user.toJSON();
   }
 }
