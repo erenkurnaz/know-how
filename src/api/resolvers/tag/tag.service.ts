@@ -38,15 +38,6 @@ export class TagService {
     return tag.toJSON(user);
   }
 
-  private async getUser(userId?: string): Promise<User | null> {
-    if (!userId) return null;
-
-    return await this.userRepository.findOne(
-      { id: userId },
-      { populate: ['favoriteTags'] },
-    );
-  }
-
   async removeFromFavorite(id: string, userId: string) {
     const user = await this.getUser(userId);
     if (!user) throw new UserNotFoundException();
@@ -57,5 +48,14 @@ export class TagService {
     await this.userRepository.persistAndFlush(user);
 
     return tag.toJSON(user);
+  }
+
+  private async getUser(userId?: string): Promise<User | null> {
+    if (!userId) return null;
+
+    return await this.userRepository.findOne(
+      { id: userId },
+      { populate: ['favoriteTags'] },
+    );
   }
 }
