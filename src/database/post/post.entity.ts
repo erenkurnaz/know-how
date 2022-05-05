@@ -10,7 +10,7 @@ import {
 } from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { Base } from '../base.entity';
+import { Base } from '../base/base.entity';
 import { User } from '../user';
 import { PostRepository } from './post.repository';
 import { Tag } from '@database/tag/tag.entity';

@@ -1,7 +1,7 @@
 import { Entity, EntityDTO, Property } from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { Base } from '../base.entity';
+import { Base } from '../base/base.entity';
 import { User } from '@database/user';
 import { TagRepository } from './tag.repository';
 

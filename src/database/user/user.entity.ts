@@ -9,7 +9,7 @@ import {
 } from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { Base } from '../base.entity';
+import { Base } from '../base/base.entity';
 import { UserRepository } from './user.repository';
 import { Post } from '@database/post';
 import { RefreshToken } from '@database/refresh-token';
