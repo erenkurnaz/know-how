@@ -1,6 +1,7 @@
 import {
   Collection,
   Entity,
+  EntityDTO,
   ManyToMany,
   OneToMany,
   Property,
@@ -8,7 +9,7 @@ import {
 } from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { BaseEntity } from '../base.entity';
+import { Base } from '../base.entity';
 import { UserRepository } from './user.repository';
 import { Post } from '@entities/post';
 import { RefreshToken } from '@entities/refresh-token';
@@ -16,7 +17,7 @@ import { Tag } from '@entities/tag';
 
 @ObjectType()
 @Entity({ customRepository: () => UserRepository })
-export class User extends BaseEntity {
+export class User extends Base<User> {
   @Field()
   @Property({ unique: true })
   email: string;
@@ -84,8 +85,8 @@ export class User extends BaseEntity {
   @Property({ nullable: true })
   instagram?: string;
 
-  toJSON(follower?: User) {
-    const user = wrap<User>(this).toObject() as unknown as User;
+  toJSON(follower?: User): UserDTO {
+    const user = wrap<User>(this).toObject();
     user.isFollowing =
       follower && follower.followings.isInitialized()
         ? follower.followings.contains(this)
@@ -94,3 +95,5 @@ export class User extends BaseEntity {
     return user;
   }
 }
+
+export type UserDTO = EntityDTO<User>;

@@ -1,6 +1,7 @@
 import {
   Collection,
   Entity,
+  EntityDTO,
   Index,
   ManyToMany,
   ManyToOne,
@@ -9,7 +10,7 @@ import {
 } from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { BaseEntity } from '../base.entity';
+import { Base } from '../base.entity';
 import { User } from '../user';
 import { PostRepository } from './post.repository';
 import { Tag } from '@entities/tag/tag.entity';
@@ -19,7 +20,7 @@ import { Tag } from '@entities/tag/tag.entity';
 @Index({
   properties: ['content', 'title'],
 })
-export class Post extends BaseEntity {
+export class Post extends Base<Post> {
   @Field()
   @Property()
   title: string;
@@ -40,8 +41,11 @@ export class Post extends BaseEntity {
   })
   tags = new Collection<Tag>(this);
 
-  toJSON() {
-    this.owner = wrap<User>(this.owner).toObject() as unknown as User;
-    return this;
+  toJSON(): PostDTO {
+    const post = this.toObject();
+    post.owner = wrap<User>(this.owner).toObject();
+    return post;
   }
 }
+
+export type PostDTO = EntityDTO<Post>;

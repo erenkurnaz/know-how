@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { User, UserRepository } from '@entities/user';
 import { UserNotFoundException } from '@api/resolvers/auth/errors';
 import { wrap } from '@mikro-orm/core';
+import { UserDTO } from '@entities/user/user.entity';
 
 @Injectable()
 export class UserService {
@@ -14,7 +15,7 @@ export class UserService {
     return foundUser;
   }
 
-  async update(id: string, userDto: Partial<User>): Promise<User> {
+  async update(id: string, userDto: Partial<User>) {
     const foundUser = await this.userRepository.findOne({ id });
     if (!foundUser) throw new UserNotFoundException();
 
@@ -24,7 +25,7 @@ export class UserService {
     return foundUser;
   }
 
-  async follow(followerId: string, followingId: string) {
+  async follow(followerId: string, followingId: string): Promise<UserDTO> {
     if (followerId === followingId) throw new BadRequestException();
 
     const [follower, following] = await Promise.all([
@@ -43,7 +44,7 @@ export class UserService {
     return following.toJSON(follower);
   }
 
-  async unfollow(followerId: string, followingId: string) {
+  async unfollow(followerId: string, followingId: string): Promise<UserDTO> {
     if (followerId === followingId) throw new BadRequestException();
     const [follower, following] = await Promise.all([
       this.userRepository.findOneOrFail(

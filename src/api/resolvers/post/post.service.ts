@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { wrap } from '@mikro-orm/core';
 
-import { Post, PostRepository } from '@entities/post';
+import { Post, PostDTO, PostRepository } from '@entities/post';
 import { User, UserRepository } from '@entities/user';
 import { PostInput } from './dto';
 import { TagRepository } from '@entities/tag';
@@ -14,7 +14,7 @@ export class PostService {
     private readonly tagRepository: TagRepository,
   ) {}
 
-  async findAll(): Promise<Post[]> {
+  async findAll(): Promise<PostDTO[]> {
     const posts = await this.postRepository.findAll({
       populate: ['owner', 'tags'],
     });
@@ -22,7 +22,7 @@ export class PostService {
     return posts.map((post) => post.toJSON());
   }
 
-  async create(user: User, postDto: PostInput): Promise<Post> {
+  async create(user: User, postDto: PostInput): Promise<PostDTO> {
     const tags = await this.tagRepository.find({ id: { $in: postDto.tagIds } });
 
     const post = new Post();
@@ -36,7 +36,11 @@ export class PostService {
     return post.toJSON();
   }
 
-  async update(id: string, postDto: PostInput, userId: string): Promise<Post> {
+  async update(
+    id: string,
+    postDto: PostInput,
+    userId: string,
+  ): Promise<PostDTO> {
     const tags = await this.tagRepository.find({ id: { $in: postDto.tagIds } });
     const post = await this.postRepository.findOneOrFail(
       {
@@ -53,7 +57,7 @@ export class PostService {
     return post.toJSON();
   }
 
-  async delete(id: string, userId: string): Promise<Post> {
+  async delete(id: string, userId: string): Promise<PostDTO> {
     const post = await this.postRepository.findOneOrFail({
       id,
       owner: { id: userId },
@@ -63,14 +67,15 @@ export class PostService {
     return post.toJSON();
   }
 
-  async findById(id: string): Promise<Post> {
-    return this.postRepository.findOneOrFail(
+  async findById(id: string): Promise<PostDTO> {
+    const foundPost = await this.postRepository.findOneOrFail(
       { id },
       { populate: ['owner', 'tags'] },
     );
+    return foundPost.toJSON();
   }
 
-  async findByUserId(userId: string): Promise<Post[]> {
+  async findByUserId(userId: string): Promise<PostDTO[]> {
     const owner = await this.userRepository.findOneOrFail({ id: userId });
     const posts = await this.postRepository.find(
       { owner },

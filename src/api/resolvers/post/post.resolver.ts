@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { Post } from '@entities/post';
+import { Post, PostDTO } from '@entities/post';
 import { User } from '@entities/user';
 import { CurrentUser, Public } from '@api/decorators';
 import { PostService } from './post.service';
@@ -14,7 +14,7 @@ export class PostResolver {
   async createPost(
     @CurrentUser() user: User,
     @Args('input') postDto: PostInput,
-  ): Promise<Post> {
+  ): Promise<PostDTO> {
     return await this.postService.create(user, postDto);
   }
 
@@ -23,7 +23,7 @@ export class PostResolver {
     @CurrentUser('id') userId: string,
     @Args('id') id: string,
     @Args('input') postDto: PostInput,
-  ): Promise<Post> {
+  ): Promise<PostDTO> {
     return await this.postService.update(id, postDto, userId);
   }
 
@@ -31,7 +31,7 @@ export class PostResolver {
   async deletePost(
     @CurrentUser('id') userId: string,
     @Args('id') id: string,
-  ): Promise<Post> {
+  ): Promise<PostDTO> {
     return await this.postService.delete(id, userId);
   }
 
@@ -43,19 +43,19 @@ export class PostResolver {
 
   @Public()
   @Query(() => Post)
-  async post(@Args('id') id: string): Promise<Post> {
+  async post(@Args('id') id: string): Promise<PostDTO> {
     return await this.postService.findById(id);
   }
 
   @Public()
   @Query(() => [Post])
-  async posts(): Promise<Post[]> {
+  async posts(): Promise<PostDTO[]> {
     return await this.postService.findAll();
   }
 
   @Public()
   @Query(() => [Post])
-  async postsByUserId(@Args('userId') userId: string): Promise<Post[]> {
+  async postsByUserId(@Args('userId') userId: string): Promise<PostDTO[]> {
     return await this.postService.findByUserId(userId);
   }
 }

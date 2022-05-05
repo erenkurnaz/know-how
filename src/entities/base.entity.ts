@@ -1,10 +1,10 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { BaseEntity, Entity, PrimaryKey, Property } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { v4 } from 'uuid';
 
 @ObjectType()
 @Entity({ abstract: true })
-export abstract class BaseEntity {
+export abstract class Base<T extends Base<T>> extends BaseEntity<T, 'id'> {
   @Field(() => ID)
   @PrimaryKey({ type: 'uuid' })
   id = v4();
