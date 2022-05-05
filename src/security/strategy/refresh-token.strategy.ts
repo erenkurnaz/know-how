@@ -5,8 +5,8 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 
 import { IConfig } from '@config/configuration';
-import { RefreshTokenRepository } from '@entities/refresh-token';
-import { UserDTO } from '@entities/user/user.entity';
+import { RefreshTokenRepository } from '@database/refresh-token';
+import { UserDTO } from '@database/user/user.entity';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(

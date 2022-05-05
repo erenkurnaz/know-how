@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { User } from '@entities/user';
-import { RefreshToken, RefreshTokenRepository } from '@entities/refresh-token';
+import { User } from '@database/user';
+import { RefreshToken, RefreshTokenRepository } from '@database/refresh-token';
 import { IConfig } from '@config/configuration';
 
 export interface TokenPayload {
