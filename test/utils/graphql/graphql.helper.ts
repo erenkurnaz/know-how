@@ -1,44 +1,22 @@
 import supertest from 'supertest';
 import { ApolloError } from 'apollo-server-express';
 import { APP, getConfig } from '../helpers/app.helper';
-import * as MUTATIONS from './mutations/index';
-import * as QUERIES from './queries/index';
-import { MutationInput } from './mutations/input-types';
-import { QueryInput } from './queries/query-inputs';
-
-type Mutation = keyof typeof MUTATIONS;
-type Query = keyof typeof QUERIES;
 
 export interface ApolloResponse<T> {
   data: T;
   errors?: ApolloError;
 }
 
-export class GqlBuilder<T = unknown> {
+export class GqlClient<T, V = unknown> {
   private readonly path: string;
-  private gqlQuery: { name: string; query: string };
-  private variables: QueryInput<Query> | MutationInput<Mutation>;
   private client: supertest.Request;
 
-  constructor() {
+  constructor(
+    private readonly gqlQuery: { name: string; query: string },
+    private readonly variables?: V,
+  ) {
     this.path = getConfig('graphql').path;
     this.initClient();
-  }
-
-  public setQuery<Q extends Query>(query: Q, input: QueryInput<Q>) {
-    this.gqlQuery = QUERIES[query];
-
-    if (input) this.variables = input;
-
-    return this;
-  }
-
-  public setMutation<M extends Mutation>(mutation: M, input: MutationInput<M>) {
-    this.gqlQuery = MUTATIONS[mutation];
-
-    if (input) this.variables = input;
-
-    return this;
   }
 
   public withAuthentication(token: string) {
@@ -67,3 +45,6 @@ export class GqlBuilder<T = unknown> {
       .set('Accept', 'application/json');
   }
 }
+
+export const gql = (query: TemplateStringsArray, ...args: string[]) =>
+  [...query, ...args].join('');

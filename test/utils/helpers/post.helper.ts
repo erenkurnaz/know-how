@@ -1,21 +1,19 @@
-import { IPost } from '../graphql/types/post-type';
+import { IPost } from '../graphql/object-types';
 import faker from '@faker-js/faker';
-import { GqlBuilder } from '../graphql';
+import { postCreateMutation } from '../graphql/mutations';
 
 export const createPost = async (
   accessToken: string,
   tagIds?: string[],
 ): Promise<IPost> => {
-  const { data: createdPost } = await new GqlBuilder<IPost>()
-    .setMutation('CREATE_POST_MUTATION', {
+  return await postCreateMutation<IPost>(
+    {
       input: {
         title: faker.random.words(4),
         content: faker.random.words(12),
         tagIds: tagIds || [],
       },
-    })
-    .withAuthentication(accessToken)
-    .execute();
-
-  return createdPost;
+    },
+    accessToken,
+  );
 };

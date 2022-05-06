@@ -1,14 +1,12 @@
 import faker from '@faker-js/faker';
-import { GqlBuilder } from '../graphql';
-import { ITag } from '../graphql/types/tag-type';
+import { ITag } from '../graphql/object-types';
+import { tagCreateMutation } from '../graphql/mutations';
 
 export const createTag = async (accessToken: string): Promise<ITag> => {
-  const { data: createdTag } = await new GqlBuilder<ITag>()
-    .setMutation('CREATE_TAG_MUTATION', {
+  return await tagCreateMutation<ITag>(
+    {
       name: faker.random.words(2),
-    })
-    .withAuthentication(accessToken)
-    .execute();
-
-  return createdTag;
+    },
+    accessToken,
+  );
 };

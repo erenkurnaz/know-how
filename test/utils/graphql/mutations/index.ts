@@ -1,11 +1,14 @@
-export { LOGIN_MUTATION } from './login-mutation';
-export { REGISTER_MUTATION } from './register-mutation';
-export { UPDATE_USER_MUTATION } from './update-user-mutation';
-export { CREATE_POST_MUTATION } from './create-post-mutation';
-export { UPDATE_POST_MUTATION } from './update-post-mutation';
-export { DELETE_POST_MUTATION } from './delete-post-mutation';
-export { CREATE_TAG_MUTATION } from './create-tag-mutation';
-export { FAVORITE_TAG_MUTATION } from './favorite-tag-mutation';
-export { UNFAVORITE_TAG_MUTATION } from './unfavorite-tag-mutation';
-export { FOLLOW_USER_MUTATION } from './follow-user-mutation';
-export { UNFOLLOW_USER_MUTATION } from './unfollow-user-mutation';
+export { signInMutation } from './sign-in.mutation';
+export { signUpMutation } from './sign-up.mutation';
+
+export { postCreateMutation } from './post-create.mutation';
+export { postUpdateMutation } from './post-update.mutation';
+export { postDeleteMutation } from './post-delete.mutation';
+
+export { tagCreateMutation } from './tag-create.mutation';
+export { tagFavoriteMutation } from './tag-favorite.mutation';
+export { tagUnfavoriteMutation } from './tag-unfavorite.mutation';
+
+export { userFollowMutation } from './user-follow.mutation';
+export { userUnfollowMutation } from './user-unfollow.mutation';
+export { userUpdateMutation } from './user-update.mutation';

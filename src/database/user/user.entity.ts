@@ -56,7 +56,7 @@ export class User extends Base<User> {
   followings = new Collection<User>(this);
 
   @Field(() => Boolean, { nullable: true })
-  isFollowing?: boolean;
+  isFollowing = false;
 
   @OneToMany({
     entity: () => RefreshToken,

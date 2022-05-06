@@ -7,7 +7,7 @@ import {
 } from './errors';
 import { UserRepository, User } from '@database/user';
 import { HashService } from '@security/services';
-import { LoginInput, RegisterInput } from './dto';
+import { SignInInput, SignUpInput } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +16,7 @@ export class AuthService {
     private readonly hashService: HashService,
   ) {}
 
-  async register({ email, password, fullName }: RegisterInput): Promise<User> {
+  async register({ email, password, fullName }: SignUpInput): Promise<User> {
     const exists = await this.userRepository.checkExists({ email });
     if (exists) throw new UserExistsException();
 
@@ -29,7 +29,7 @@ export class AuthService {
     return user;
   }
 
-  async login({ email, password }: LoginInput): Promise<User> {
+  async login({ email, password }: SignInInput): Promise<User> {
     const user = await this.userRepository.findOne({
       email,
     });
