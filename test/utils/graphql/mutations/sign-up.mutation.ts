@@ -44,7 +44,7 @@ export interface IRegisterInput {
 
 type IRegisterResult = IAuthResult | IServerError | IValidationError;
 
-export const registerMutation = async <
+export const signUpMutation = async <
   T extends IRegisterResult = IRegisterResult,
 >(
   variables: IRegisterInput,

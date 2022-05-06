@@ -1,10 +1,10 @@
 import { IAuthResult } from '../graphql/object-types';
 import { IUser } from '../graphql/object-types';
-import { registerMutation } from '../graphql/mutations/register-mutation';
-import { loginMutation } from '../graphql/mutations/login-mutation';
+import { signUpMutation } from '../graphql/mutations/sign-up.mutation';
+import { signInMutation } from '../graphql/mutations/sign-in.mutation';
 
 export const authorizeUser = async (user: IUser): Promise<IAuthResult> => {
-  await registerMutation({
+  await signUpMutation({
     input: {
       email: user.email,
       password: user.password,
@@ -12,7 +12,7 @@ export const authorizeUser = async (user: IUser): Promise<IAuthResult> => {
     },
   });
 
-  const response = await loginMutation({
+  const response = await signInMutation({
     input: { email: user.email, password: user.password },
   });
 

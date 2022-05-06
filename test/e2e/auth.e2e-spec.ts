@@ -2,15 +2,14 @@ import { HttpStatus } from '@nestjs/common';
 import {
   IServerError,
   IUser,
+  IAuthResult,
   IValidationError,
 } from 'test/utils/graphql/object-types';
 import { clearDatabase } from '../utils/helpers/app.helper';
 
 import { authorizeUser } from '../utils/helpers/auth.helper';
 import { createUserMock } from '../utils/helpers/user.helper';
-import { registerMutation } from '../utils/graphql/mutations/register-mutation';
-import { IAuthResult } from '../utils/graphql/types';
-import { loginMutation } from '../utils/graphql/mutations/login-mutation';
+import { signUpMutation, signInMutation } from '../utils/graphql/mutations';
 
 describe('User authentication', () => {
   let USER: IUser;
@@ -22,7 +21,7 @@ describe('User authentication', () => {
 
   describe('when user register', () => {
     it('should register successfully', async () => {
-      const authResult = await registerMutation<IAuthResult>({
+      const authResult = await signUpMutation<IAuthResult>({
         input: {
           email: USER.email,
           password: USER.password,
@@ -39,7 +38,7 @@ describe('User authentication', () => {
         email: USER.email,
       });
 
-      const errorResponse = await registerMutation<IServerError>({
+      const errorResponse = await signUpMutation<IServerError>({
         input: {
           email: user.email,
           password: user.password,
@@ -57,7 +56,7 @@ describe('User authentication', () => {
     it('should fail with invalid email', async () => {
       const user = createUserMock({ email: 'invalid_email' });
 
-      const validationError = await registerMutation<IValidationError>({
+      const validationError = await signUpMutation<IValidationError>({
         input: {
           email: user.email,
           password: user.password,
@@ -71,7 +70,7 @@ describe('User authentication', () => {
     it('should fail with invalid password', async () => {
       const user = createUserMock({ password: 'inv_pwd' });
 
-      const validationError = await registerMutation<IValidationError>({
+      const validationError = await signUpMutation<IValidationError>({
         input: {
           email: user.email,
           password: user.password,
@@ -87,7 +86,7 @@ describe('User authentication', () => {
     it('should login successfully', async () => {
       await authorizeUser(USER);
 
-      const authResult = await loginMutation<IAuthResult>({
+      const authResult = await signInMutation<IAuthResult>({
         input: {
           email: USER.email,
           password: USER.password,
@@ -100,7 +99,7 @@ describe('User authentication', () => {
     it('should fail with incorrect email', async () => {
       await authorizeUser(USER);
 
-      const credentialError = await loginMutation<IServerError>({
+      const credentialError = await signInMutation<IServerError>({
         input: {
           email: 'incorrect@mail.com',
           password: USER.password,
@@ -117,7 +116,7 @@ describe('User authentication', () => {
     it('should fail with incorrect password', async () => {
       await authorizeUser(USER);
 
-      const credentialError = await loginMutation<IServerError>({
+      const credentialError = await signInMutation<IServerError>({
         input: {
           email: USER.email,
           password: 'inv_pwd',

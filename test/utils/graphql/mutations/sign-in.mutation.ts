@@ -43,7 +43,7 @@ export interface ILoginInput {
 
 type ILoginResult = IAuthResult | IValidationError | IServerError;
 
-export const loginMutation = async <T extends ILoginResult = ILoginResult>(
+export const signInMutation = async <T extends ILoginResult = ILoginResult>(
   variables: ILoginInput,
 ): Promise<T> => {
   const response = await new GqlClient<T>(LOGIN_MUTATION, variables).execute();

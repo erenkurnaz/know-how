@@ -10,9 +10,12 @@ export class Exception implements IException {
   name: string;
   message: string;
 
-  constructor(readonly status: HttpStatus) {
+  constructor(readonly status: HttpStatus, readonly errorMessage?: string) {
     this.name = this.constructor.name;
     this.initMessage();
+    if (errorMessage) {
+      this.message = errorMessage;
+    }
   }
 
   private initMessage() {
