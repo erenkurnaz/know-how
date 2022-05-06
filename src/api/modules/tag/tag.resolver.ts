@@ -1,15 +1,15 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { Tag, TagDTO } from '@database/tag';
 import { User } from '@database/user';
 import { CurrentUser, Public } from '@api/decorators';
 import { TagService } from './tag.service';
+import { TagDTO } from '@api/modules/tag/dto/tag.dto';
 
-@Resolver(() => Tag)
+@Resolver(() => TagDTO)
 export class TagResolver {
   constructor(private readonly tagService: TagService) {}
 
-  @Mutation(() => Tag)
+  @Mutation(() => TagDTO)
   async createTag(
     @CurrentUser() user: User,
     @Args('name') name: string,
@@ -17,7 +17,7 @@ export class TagResolver {
     return await this.tagService.create(name);
   }
 
-  @Mutation(() => Tag)
+  @Mutation(() => TagDTO)
   async favoriteTag(
     @CurrentUser('id') userId: string,
     @Args('id') id: string,
@@ -25,7 +25,7 @@ export class TagResolver {
     return await this.tagService.addToFavorite(id, userId);
   }
 
-  @Mutation(() => Tag)
+  @Mutation(() => TagDTO)
   async unfavoriteTag(
     @CurrentUser('id') userId: string,
     @Args('id') id: string,
@@ -34,7 +34,7 @@ export class TagResolver {
   }
 
   @Public()
-  @Query(() => [Tag])
+  @Query(() => [TagDTO])
   async tags(@CurrentUser('id') userId: string | undefined): Promise<TagDTO[]> {
     return await this.tagService.findAll(userId);
   }

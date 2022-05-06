@@ -121,4 +121,5 @@ export const SERVER_ERROR_FRAGMENT = gql`
   }
 `;
 
+export type IErrorableResult<T> = T | IValidationError | IServerError;
 // E: ERRORS //

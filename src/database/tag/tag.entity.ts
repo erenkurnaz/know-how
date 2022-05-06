@@ -1,21 +1,18 @@
 import { Entity, EntityDTO, Property } from '@mikro-orm/core';
-import { Field, ObjectType } from '@nestjs/graphql';
 
 import { Base } from '../base/base.entity';
 import { User } from '@database/user';
 import { TagRepository } from './tag.repository';
 
-@ObjectType()
 @Entity({ customRepository: () => TagRepository })
 export class Tag extends Base<Tag> {
-  @Field()
   @Property({ unique: true })
   name: string;
 
-  @Field(() => Boolean, { defaultValue: false })
-  isFavorite: boolean;
+  @Property({ type: Boolean, persist: false })
+  isFavorite = false;
 
-  toJSON(user?: User | null): TagDTO {
+  toJSON(user?: User | null): EntityDTO<Tag> {
     const tag = this.toObject();
     tag.isFavorite =
       user && user.favoriteTags.isInitialized()
@@ -25,5 +22,3 @@ export class Tag extends Base<Tag> {
     return tag;
   }
 }
-
-export type TagDTO = EntityDTO<Tag>;

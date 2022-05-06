@@ -1,7 +1,7 @@
 import { createErrorableUnion } from '@api/utils/union-factory';
-import { User } from '@database/user';
+import { UserDTO } from './user.dto';
 
 export const ErrorableUserResult = createErrorableUnion(
   'ErrorableUserResult',
-  User,
+  UserDTO,
 );

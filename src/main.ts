@@ -18,4 +18,5 @@ bootstrap().catch((error) => {
     `Failed to initialize, due to: ${error}`,
     error.constructor.name,
   );
+  console.log(error);
 });

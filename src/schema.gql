@@ -16,16 +16,16 @@ scalar DateTime
 union ErrorableUserResult = ServerError | User | ValidationError
 
 type Mutation {
-  createPost(input: PostInput!): Post!
   createTag(name: String!): Tag!
-  deletePost(id: String!): Post!
   favoriteTag(id: String!): Tag!
   followUser(userId: String!): User!
+  postCreate(input: PostInput!): PostCreateResult!
+  postDelete(id: String!): PostDeleteResult!
+  postUpdate(id: String!, input: PostInput!): PostUpdateResult!
   signIn(input: SignInInput!): SignInResult!
   signUp(input: SignUpInput!): SignUpResult!
   unfavoriteTag(id: String!): Tag!
   unfollowUser(userId: String!): User!
-  updatePost(id: String!, input: PostInput!): Post!
   updateUser(input: UpdateUserInput!): ErrorableUserResult!
 }
 
@@ -39,11 +39,17 @@ type Post {
   updatedAt: DateTime
 }
 
+union PostCreateResult = Post | ServerError | ValidationError
+
+union PostDeleteResult = Post | ServerError | ValidationError
+
 input PostInput {
   content: String!
   tagIds: [String!]!
   title: String!
 }
+
+union PostUpdateResult = Post | ServerError | ValidationError
 
 type Query {
   currentUser: User!
@@ -101,15 +107,16 @@ input UpdateUserInput {
 type User {
   createdAt: DateTime!
   email: String!
-  favoriteTags: [Tag!]!
-  followers: [User!]!
-  followings: [User!]!
+  favoriteTags: [Tag!]
+  followers: [User!]
+  followings: [User!]
   fullName: String!
   github: String
   id: ID!
   instagram: String
   isFollowing: Boolean
   linkedin: String
+  posts: [Post!]
   twitter: String
   updatedAt: DateTime
 }

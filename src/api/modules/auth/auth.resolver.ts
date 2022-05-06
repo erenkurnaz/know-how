@@ -14,6 +14,8 @@ import {
   SignUpResult,
   SignInResult,
 } from './dto';
+import { UserDTO } from '@api/modules/user/dto/user.dto';
+import { EntityDTO } from '@mikro-orm/core';
 
 @Resolver(() => User)
 export class AuthResolver {
@@ -45,23 +47,28 @@ export class AuthResolver {
   @Public()
   @Query(() => RefreshResult)
   @UseGuards(RefreshTokenGuard)
-  async refreshAccessToken(@CurrentUser() user: User): Promise<RefreshResult> {
+  async refreshAccessToken(
+    @CurrentUser() user: EntityDTO<User>,
+  ): Promise<RefreshResult> {
     const accessToken = await this.tokenService.generateAccessToken(user);
 
     return new RefreshResult({
-      user: user,
+      user: new UserDTO(user),
       accessToken,
     });
   }
 
   private async mapResultWithTokens(user: User): Promise<AuthResult> {
     const [refreshToken, accessToken] = await Promise.all([
-      this.tokenService.generateRefreshToken(user),
-      this.tokenService.generateAccessToken(user),
+      this.tokenService.generateRefreshToken({
+        id: user.id,
+        email: user.email,
+      }),
+      this.tokenService.generateAccessToken({ id: user.id, email: user.email }),
     ]);
 
     return new AuthResult({
-      user,
+      user: user.toJSON(),
       refreshToken,
       accessToken,
     });

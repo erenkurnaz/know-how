@@ -8,7 +8,7 @@ export function createUserMock(from?: Partial<IUser>): IUser {
     email: faker.internet.email(),
     password: faker.internet.password(8),
     fullName: faker.internet.userName(),
-    isFollowing: null,
+    isFollowing: false,
     github: faker.internet.domainName(),
     linkedin: faker.internet.domainName(),
     twitter: faker.internet.domainName(),
