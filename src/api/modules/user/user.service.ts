@@ -40,8 +40,8 @@ export class UserService {
       }),
     ]);
 
-    follower.followings.add(following);
-    await this.userRepository.persistAndFlush(follower);
+    following.followers.add(follower);
+    await this.userRepository.flush();
 
     return following.toJSON(follower);
   }

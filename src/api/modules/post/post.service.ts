@@ -93,10 +93,33 @@ export class PostService {
   async search(keyword: string): Promise<PostDTO[]> {
     const foundPosts = await this.postRepository.find(
       {
-        $or: [{ title: { $ilike: keyword } }, { content: { $ilike: keyword } }],
+        $or: [
+          { title: { $ilike: keyword } },
+          { content: { $ilike: keyword } },
+          { tags: { name: { $ilike: keyword } } },
+        ],
       },
       { populate: ['owner', 'tags'] },
     );
     return foundPosts.map((post) => post.toJSON());
+  }
+
+  async getFeed(userId: string) {
+    const user = await this.userRepository.findOneOrFail(
+      { id: userId },
+      { populate: ['followings', 'favoriteTags'] },
+    );
+
+    const posts = await this.postRepository.find(
+      {
+        $or: [
+          { owner: { $in: user.followings.getItems() } },
+          { tags: { $in: user.favoriteTags.getItems() } },
+        ],
+      },
+      { populate: ['owner', 'tags'] },
+    );
+
+    return posts.map((post) => post.toJSON());
   }
 }

@@ -51,6 +51,7 @@ union PostUpdateResult = Post | ServerError | ValidationError
 
 type Query {
   currentUser: User!
+  feed: [Post!]!
   post(id: String!): Post!
   postSearch(keyword: String!): [Post!]!
   posts: [Post!]!
