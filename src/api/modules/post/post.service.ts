@@ -5,6 +5,7 @@ import { Post, PostDTO, PostRepository } from '@database/post';
 import { User, UserRepository } from '@database/user';
 import { PostInput } from './dto';
 import { TagRepository } from '@database/tag';
+import { Exception } from '@src/errors';
 
 @Injectable()
 export class PostService {
@@ -42,13 +43,15 @@ export class PostService {
     userId: string,
   ): Promise<PostDTO> {
     const tags = await this.tagRepository.find({ id: { $in: postDto.tagIds } });
-    const post = await this.postRepository.findOneOrFail(
+    const post = await this.postRepository.findOne(
       {
         id,
         owner: { id: userId },
       },
       { populate: ['owner'] },
     );
+    if (!post) throw new Exception(404, 'Post not found!');
+
     wrap(post).assign(postDto);
     post.tags.set(tags);
 
@@ -58,27 +61,29 @@ export class PostService {
   }
 
   async delete(id: string, userId: string): Promise<PostDTO> {
-    const post = await this.postRepository.findOneOrFail({
+    const post = await this.postRepository.findOne({
       id,
       owner: { id: userId },
     });
+    if (!post) throw new Exception(404, 'Post not found!');
 
     await this.postRepository.removeAndFlush(post);
     return post.toJSON();
   }
 
   async findById(id: string): Promise<PostDTO> {
-    const foundPost = await this.postRepository.findOneOrFail(
+    const post = await this.postRepository.findOne(
       { id },
       { populate: ['owner', 'tags'] },
     );
-    return foundPost.toJSON();
+    if (!post) throw new Exception(404, 'Post not found!');
+
+    return post.toJSON();
   }
 
   async findByUserId(userId: string): Promise<PostDTO[]> {
-    const owner = await this.userRepository.findOneOrFail({ id: userId });
     const posts = await this.postRepository.find(
-      { owner },
+      { owner: { id: userId } },
       { populate: ['owner', 'tags'] },
     );
 

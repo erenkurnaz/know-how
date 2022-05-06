@@ -3,6 +3,7 @@ import { UserRepository } from '@database/user';
 import { UserNotFoundException } from '@api/modules/auth/errors';
 import { wrap } from '@mikro-orm/core';
 import { UserDTO } from '@database/user/user.entity';
+import { Exception } from '@src/errors';
 
 @Injectable()
 export class UserService {
@@ -26,7 +27,8 @@ export class UserService {
   }
 
   async follow(followerId: string, followingId: string): Promise<UserDTO> {
-    if (followerId === followingId) throw new BadRequestException();
+    if (followerId === followingId)
+      throw new Exception(500, 'User cannot self follow ');
 
     const [follower, following] = await Promise.all([
       this.userRepository.findOneOrFail(
@@ -45,7 +47,9 @@ export class UserService {
   }
 
   async unfollow(followerId: string, followingId: string): Promise<UserDTO> {
-    if (followerId === followingId) throw new BadRequestException();
+    if (followerId === followingId)
+      throw new Exception(500, 'User cannot self follow');
+
     const [follower, following] = await Promise.all([
       this.userRepository.findOneOrFail(
         { id: followerId },
