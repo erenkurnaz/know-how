@@ -4,29 +4,30 @@ import { Tag, TagDTO } from '@database/tag';
 import { User } from '@database/user';
 import { CurrentUser, Public } from '@api/decorators';
 import { TagService } from './tag.service';
+import { TagCreateResult, TagFavoriteResult, TagUnfavoriteResult } from './dto';
 
 @Resolver(() => Tag)
 export class TagResolver {
   constructor(private readonly tagService: TagService) {}
 
-  @Mutation(() => Tag)
-  async createTag(
+  @Mutation(() => TagCreateResult)
+  async tagCreate(
     @CurrentUser() user: User,
     @Args('name') name: string,
   ): Promise<TagDTO> {
     return await this.tagService.create(name);
   }
 
-  @Mutation(() => Tag)
-  async favoriteTag(
+  @Mutation(() => TagFavoriteResult)
+  async tagFavorite(
     @CurrentUser('id') userId: string,
     @Args('id') id: string,
   ): Promise<TagDTO> {
     return await this.tagService.addToFavorite(id, userId);
   }
 
-  @Mutation(() => Tag)
-  async unfavoriteTag(
+  @Mutation(() => TagUnfavoriteResult)
+  async tagUnfavorite(
     @CurrentUser('id') userId: string,
     @Args('id') id: string,
   ): Promise<TagDTO> {

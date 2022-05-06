@@ -7,11 +7,12 @@ import { TokenService } from '@security/services';
 import { CurrentUser, Public } from '@api/decorators';
 import { AuthService } from './auth.service';
 import {
-  ErrorableAuthResult,
-  RegisterInput,
-  LoginInput,
+  SignUpInput,
+  SignInInput,
   RefreshResult,
   AuthResult,
+  SignUpResult,
+  SignInResult,
 } from './dto';
 
 @Resolver(() => User)
@@ -22,20 +23,20 @@ export class AuthResolver {
   ) {}
 
   @Public()
-  @Mutation(() => ErrorableAuthResult)
-  async register(
-    @Args('input') input: RegisterInput,
-  ): Promise<typeof ErrorableAuthResult> {
+  @Mutation(() => SignUpResult)
+  async signUp(
+    @Args('input') input: SignUpInput,
+  ): Promise<typeof SignUpResult> {
     const result = await this.authService.register(input);
 
     return await this.mapResultWithTokens(result);
   }
 
   @Public()
-  @Mutation(() => ErrorableAuthResult)
-  async login(
-    @Args('input') input: LoginInput,
-  ): Promise<typeof ErrorableAuthResult> {
+  @Mutation(() => SignInResult)
+  async signIn(
+    @Args('input') input: SignInInput,
+  ): Promise<typeof SignInResult> {
     const user = await this.authService.login(input);
 
     return await this.mapResultWithTokens(user);
@@ -48,21 +49,19 @@ export class AuthResolver {
     const accessToken = await this.tokenService.generateAccessToken(user);
 
     return new RefreshResult({
-      user: user,
+      user: user.toJSON(),
       accessToken,
     });
   }
 
-  private async mapResultWithTokens(
-    user: User,
-  ): Promise<typeof ErrorableAuthResult> {
+  private async mapResultWithTokens(user: User): Promise<AuthResult> {
     const [refreshToken, accessToken] = await Promise.all([
       this.tokenService.generateRefreshToken(user),
       this.tokenService.generateAccessToken(user),
     ]);
 
     return new AuthResult({
-      user,
+      user: user.toJSON(),
       refreshToken,
       accessToken,
     });

@@ -8,9 +8,9 @@ export function createErrorableUnion<T>(name: string, type: Type<T>) {
     name,
     types: () => [type, ValidationError, ServerError],
     resolveType: (instance) => {
-      if (instance instanceof type) return type;
       if (instance instanceof ValidationException) return ValidationError;
       if (instance instanceof Exception) return ServerError;
+      if (instance) return type;
 
       return null;
     },

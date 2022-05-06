@@ -1,12 +1,12 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { User } from '@database/user';
+import { User, UserDTO } from '@database/user';
 import { createErrorableUnion } from '@api/utils/union-factory';
 
 @ObjectType()
 export class AuthResult {
-  @Field()
-  user: User;
+  @Field(() => User)
+  user: UserDTO;
 
   @Field()
   accessToken: string;
@@ -21,7 +21,6 @@ export class AuthResult {
   }
 }
 
-export const ErrorableAuthResult = createErrorableUnion(
-  'ErrorableAuthResult',
-  AuthResult,
-);
+export const SignInResult = createErrorableUnion('SignInResult', AuthResult);
+
+export const SignUpResult = createErrorableUnion('SignUpResult', AuthResult);

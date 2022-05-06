@@ -4,22 +4,27 @@ import { Post, PostDTO } from '@database/post';
 import { User } from '@database/user';
 import { CurrentUser, Public } from '@api/decorators';
 import { PostService } from './post.service';
-import { PostInput } from './dto';
+import {
+  PostInput,
+  PostCreateResult,
+  PostUpdateResult,
+  PostDeleteResult,
+} from './dto';
 
 @Resolver(() => Post)
 export class PostResolver {
   constructor(private readonly postService: PostService) {}
 
-  @Mutation(() => Post)
-  async createPost(
+  @Mutation(() => PostCreateResult)
+  async postCreate(
     @CurrentUser() user: User,
     @Args('input') postDto: PostInput,
   ): Promise<PostDTO> {
     return await this.postService.create(user, postDto);
   }
 
-  @Mutation(() => Post)
-  async updatePost(
+  @Mutation(() => PostUpdateResult)
+  async postUpdate(
     @CurrentUser('id') userId: string,
     @Args('id') id: string,
     @Args('input') postDto: PostInput,
@@ -27,8 +32,8 @@ export class PostResolver {
     return await this.postService.update(id, postDto, userId);
   }
 
-  @Mutation(() => Post)
-  async deletePost(
+  @Mutation(() => PostDeleteResult)
+  async postDelete(
     @CurrentUser('id') userId: string,
     @Args('id') id: string,
   ): Promise<PostDTO> {
@@ -37,7 +42,7 @@ export class PostResolver {
 
   @Public()
   @Query(() => [Post])
-  async postSearch(@Args('keyword') keyword: string) {
+  async postSearch(@Args('keyword') keyword: string): Promise<PostDTO[]> {
     return await this.postService.search(keyword);
   }
 

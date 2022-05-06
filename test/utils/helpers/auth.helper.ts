@@ -1,24 +1,18 @@
-import { IAuthResult, IUser, GqlBuilder } from '../graphql';
+import { IAuthResult, IUser } from '../graphql/object-types';
+import { signUpMutation, signInMutation } from '../graphql/mutations';
 
 export const authorizeUser = async (user: IUser): Promise<IAuthResult> => {
-  await new GqlBuilder()
-    .setMutation('REGISTER_MUTATION', {
-      input: {
-        email: user.email,
-        password: user.password,
-        fullName: user.fullName,
-      },
-    })
-    .execute();
+  await signUpMutation({
+    input: {
+      email: user.email,
+      password: user.password,
+      fullName: user.fullName,
+    },
+  });
 
-  const response = await new GqlBuilder()
-    .setMutation('LOGIN_MUTATION', {
-      input: {
-        email: user.email,
-        password: user.password,
-      },
-    })
-    .execute();
+  const response = await signInMutation({
+    input: { email: user.email, password: user.password },
+  });
 
-  return response.data as IAuthResult;
+  return response as IAuthResult;
 };
