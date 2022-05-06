@@ -13,7 +13,7 @@ export const USER_FOLLOW_MUTATION = {
   `,
 };
 
-export type IFollowUserInput = { userId: string };
+type IFollowUserInput = { userId: string };
 
 type IUserFollowResult = IUser | IServerError;
 

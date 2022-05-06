@@ -43,7 +43,7 @@ export class Post extends Base<Post> {
 
   toJSON(): PostDTO {
     const post = this.toObject();
-    post.owner = wrap<User>(this.owner).toObject();
+    post.owner = wrap<User>(this.owner).toJSON();
     return post;
   }
 }

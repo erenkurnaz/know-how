@@ -13,8 +13,9 @@ export const USER_UNFOLLOW_MUTATION = {
   `,
 };
 
-type IUserUnfollowResult = IUser | IServerError;
 type IUnfollowUserInput = { userId: string };
+
+type IUserUnfollowResult = IUser | IServerError;
 
 export const userUnfollowMutation = async <T extends IUserUnfollowResult>(
   variables: IUnfollowUserInput,

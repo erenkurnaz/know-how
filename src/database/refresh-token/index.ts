@@ -1,3 +1,3 @@
-export { RefreshToken } from './refresh-token.entity';
-export { RefreshTokenRepository } from './refresh-token.repository';
-export { RefreshTokenModule } from './refresh-token.module';
+export * from './refresh-token.entity';
+export * from './refresh-token.repository';
+export * from './refresh-token.module';

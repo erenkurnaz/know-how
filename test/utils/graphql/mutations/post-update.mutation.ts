@@ -1,12 +1,12 @@
-import { POST_FRAGMENT } from '../object-types';
+import { IServerError, IValidationError, POST_FRAGMENT } from '../object-types';
 import { GqlClient, gql } from '../graphql.helper';
 import { IPost } from '../object-types';
 
-export const UPDATE_POST_MUTATION = {
-  name: 'updatePost',
+export const POST_UPDATE_MUTATION = {
+  name: 'postUpdate',
   query: gql`
     mutation ($id: String!, $input: PostInput!) {
-      updatePost(id: $id, input: $input) {
+      postUpdate(id: $id, input: $input) {
         ...PostFields
       }
     }
@@ -14,7 +14,7 @@ export const UPDATE_POST_MUTATION = {
   `,
 };
 
-export interface IUpdatePostInput {
+interface IUpdatePostInput {
   id: string;
   input: {
     title: string;
@@ -23,11 +23,15 @@ export interface IUpdatePostInput {
   };
 }
 
-export const postUpdateMutation = async (
+type IPostUpdateResult = IPost | IValidationError | IServerError;
+
+export const postUpdateMutation = async <
+  T extends IPostUpdateResult = IPostUpdateResult,
+>(
   variables: IUpdatePostInput,
   token: string,
-): Promise<IPost> => {
-  const result = await new GqlClient<IPost>(UPDATE_POST_MUTATION, variables)
+): Promise<T> => {
+  const result = await new GqlClient<T>(POST_UPDATE_MUTATION, variables)
     .withAuthentication(token)
     .execute();
   return result.data;

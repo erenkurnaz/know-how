@@ -1,12 +1,12 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { User } from '@database/user';
+import { User, UserDTO } from '@database/user';
 import { createErrorableUnion } from '@api/utils/union-factory';
 
 @ObjectType()
 export class AuthResult {
-  @Field()
-  user: User;
+  @Field(() => User)
+  user: UserDTO;
 
   @Field()
   accessToken: string;

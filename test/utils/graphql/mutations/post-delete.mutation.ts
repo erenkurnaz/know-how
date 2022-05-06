@@ -1,11 +1,16 @@
-import { IPost, POST_FRAGMENT } from '../object-types';
+import {
+  IPost,
+  IServerError,
+  IValidationError,
+  POST_FRAGMENT,
+} from '../object-types';
 import { gql, GqlClient } from '../graphql.helper';
 
-export const DELETE_POST_MUTATION = {
-  name: 'deletePost',
+export const POST_DELETE_MUTATION = {
+  name: 'postDelete',
   query: gql`
     mutation ($id: String!) {
-      deletePost(id: $id) {
+      postDelete(id: $id) {
         ...PostFields
       }
     }
@@ -17,11 +22,15 @@ export interface IDeletePostInput {
   id: string;
 }
 
-export const postDeleteMutation = async (
+type IPostDeleteResult = IPost | IValidationError | IServerError;
+
+export const postDeleteMutation = async <
+  T extends IPostDeleteResult = IPostDeleteResult,
+>(
   variables: IDeletePostInput,
   token: string,
-): Promise<IPost> => {
-  const client = new GqlClient<IPost>(DELETE_POST_MUTATION, variables);
+): Promise<T> => {
+  const client = new GqlClient<T>(POST_DELETE_MUTATION, variables);
   if (token) client.withAuthentication(token);
 
   const result = await client.execute();

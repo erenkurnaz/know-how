@@ -49,7 +49,7 @@ export class AuthResolver {
     const accessToken = await this.tokenService.generateAccessToken(user);
 
     return new RefreshResult({
-      user: user,
+      user: user.toJSON(),
       accessToken,
     });
   }
@@ -61,7 +61,7 @@ export class AuthResolver {
     ]);
 
     return new AuthResult({
-      user,
+      user: user.toJSON(),
       refreshToken,
       accessToken,
     });
