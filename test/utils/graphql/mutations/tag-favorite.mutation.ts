@@ -1,11 +1,16 @@
-import { ITag, TAG_FRAGMENT } from '../object-types';
+import {
+  IServerError,
+  ITag,
+  IValidationError,
+  TAG_FRAGMENT,
+} from '../object-types';
 import { gql, GqlClient } from '../graphql.helper';
 
-export const FAVORITE_TAG_MUTATION = {
-  name: 'favoriteTag',
+export const TAG_FAVORITE_MUTATION = {
+  name: 'tagFavorite',
   query: gql`
     mutation ($id: String!) {
-      favoriteTag(id: $id) {
+      tagFavorite(id: $id) {
         ...TagFields
       }
     }
@@ -13,13 +18,17 @@ export const FAVORITE_TAG_MUTATION = {
   `,
 };
 
-export type IFavoriteTagInput = { id: string };
+type ITagFavoriteInput = { id: string };
 
-export const tagFavoriteMutation = async (
-  variables: IFavoriteTagInput,
+type ITagFavoriteResult = ITag | IServerError | IValidationError;
+
+export const tagFavoriteMutation = async <
+  T extends ITagFavoriteResult = ITagFavoriteResult,
+>(
+  variables: ITagFavoriteInput,
   token: string,
-): Promise<ITag> => {
-  const response = await new GqlClient<ITag>(FAVORITE_TAG_MUTATION, variables)
+): Promise<T> => {
+  const response = await new GqlClient<T>(TAG_FAVORITE_MUTATION, variables)
     .withAuthentication(token)
     .execute();
   return response.data;

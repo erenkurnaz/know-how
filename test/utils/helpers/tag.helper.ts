@@ -3,7 +3,7 @@ import { ITag } from '../graphql/object-types';
 import { tagCreateMutation } from '../graphql/mutations';
 
 export const createTag = async (accessToken: string): Promise<ITag> => {
-  return await tagCreateMutation(
+  return await tagCreateMutation<ITag>(
     {
       name: faker.random.words(2),
     },

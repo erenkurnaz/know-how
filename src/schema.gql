@@ -14,15 +14,15 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Mutation {
-  createTag(name: String!): Tag!
-  favoriteTag(id: String!): Tag!
   followUser(userId: String!): UserFollowResult!
   postCreate(input: PostInput!): PostCreateResult!
   postDelete(id: String!): PostDeleteResult!
   postUpdate(id: String!, input: PostInput!): PostUpdateResult!
   signIn(input: SignInInput!): SignInResult!
   signUp(input: SignUpInput!): SignUpResult!
-  unfavoriteTag(id: String!): Tag!
+  tagCreate(name: String!): TagCreateResult!
+  tagFavorite(id: String!): TagFavoriteResult!
+  tagUnfavorite(id: String!): TagUnfavoriteResult!
   unfollowUser(userId: String!): UserUnfollowResult!
   updateUser(input: UpdateUserInput!): UserUpdateResult!
 }
@@ -92,6 +92,12 @@ type Tag {
   name: String!
   updatedAt: DateTime
 }
+
+union TagCreateResult = ServerError | Tag | ValidationError
+
+union TagFavoriteResult = ServerError | Tag | ValidationError
+
+union TagUnfavoriteResult = ServerError | Tag | ValidationError
 
 input UpdateUserInput {
   email: String!

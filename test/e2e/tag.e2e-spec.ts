@@ -25,7 +25,7 @@ describe('Tags', () => {
 
   describe('when user add tag to favorite', () => {
     it('should return favorited tag', async () => {
-      const favoriteTag = await tagFavoriteMutation(
+      const favoriteTag = await tagFavoriteMutation<ITag>(
         { id: INITIAL_TAG.id },
         ACCESS_TOKEN,
       );
@@ -39,12 +39,12 @@ describe('Tags', () => {
 
   describe('when user remove tag from favorite', () => {
     it('should return unfavorited tag', async () => {
-      const FAVORITED_TAG = await tagFavoriteMutation(
+      const FAVORITED_TAG = await tagFavoriteMutation<ITag>(
         { id: INITIAL_TAG.id },
         ACCESS_TOKEN,
       );
 
-      const unfavoritedTag = await tagUnfavoriteMutation(
+      const unfavoritedTag = await tagUnfavoriteMutation<ITag>(
         { id: FAVORITED_TAG.id },
         ACCESS_TOKEN,
       );
@@ -55,7 +55,10 @@ describe('Tags', () => {
   });
 
   it('should create tag and return created tag', async () => {
-    const tag = await tagCreateMutation({ name: 'new tag' }, ACCESS_TOKEN);
+    const tag = await tagCreateMutation<ITag>(
+      { name: 'new tag' },
+      ACCESS_TOKEN,
+    );
 
     expect(tag).toEqual({
       id: expect.any(String),

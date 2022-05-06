@@ -1,11 +1,16 @@
-import { ITag, TAG_FRAGMENT } from '../object-types';
+import {
+  IServerError,
+  ITag,
+  IValidationError,
+  TAG_FRAGMENT,
+} from '../object-types';
 import { gql, GqlClient } from '../graphql.helper';
 
-export const CREATE_TAG_MUTATION = {
-  name: 'createTag',
+export const TAG_CREATE_MUTATION = {
+  name: 'tagCreate',
   query: gql`
     mutation ($name: String!) {
-      createTag(name: $name) {
+      tagCreate(name: $name) {
         ...TagFields
       }
     }
@@ -13,13 +18,17 @@ export const CREATE_TAG_MUTATION = {
   `,
 };
 
-export type ICreateTagInput = { name: string };
+type ITagCreateInput = { name: string };
 
-export const tagCreateMutation = async (
-  variables: ICreateTagInput,
+type ITagCreateResult = ITag | IServerError | IValidationError;
+
+export const tagCreateMutation = async <
+  T extends ITagCreateResult = ITagCreateResult,
+>(
+  variables: ITagCreateInput,
   token: string,
-): Promise<ITag> => {
-  const response = await new GqlClient<ITag>(CREATE_TAG_MUTATION, variables)
+): Promise<T> => {
+  const response = await new GqlClient<T>(TAG_CREATE_MUTATION, variables)
     .withAuthentication(token)
     .execute();
   return response.data;
