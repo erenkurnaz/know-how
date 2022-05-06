@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { wrap } from '@mikro-orm/core';
 
-import { Post, PostRepository } from '@database/post';
+import { Post, PostDTO, PostRepository } from '@database/post';
 import { User, UserRepository } from '@database/user';
 import { PostInput } from './dto';
 import { TagRepository } from '@database/tag';
-import { PostDTO } from '@api/modules/post/dto/post.dto';
 
 @Injectable()
 export class PostService {
@@ -20,7 +19,7 @@ export class PostService {
       populate: ['owner', 'tags'],
     });
 
-    return posts.map((post) => new PostDTO(post.toJSON()));
+    return posts.map((post) => post.toJSON());
   }
 
   async create(user: User, postDto: PostInput): Promise<PostDTO> {
@@ -34,7 +33,7 @@ export class PostService {
 
     await this.postRepository.persistAndFlush(post);
 
-    return new PostDTO(post.toJSON());
+    return post.toJSON();
   }
 
   async update(
@@ -55,7 +54,7 @@ export class PostService {
 
     await this.postRepository.flush();
 
-    return new PostDTO(post.toJSON());
+    return post.toJSON();
   }
 
   async delete(id: string, userId: string): Promise<PostDTO> {
@@ -65,7 +64,7 @@ export class PostService {
     });
 
     await this.postRepository.removeAndFlush(post);
-    return new PostDTO(post.toJSON());
+    return post.toJSON();
   }
 
   async findById(id: string): Promise<PostDTO> {
@@ -83,16 +82,15 @@ export class PostService {
       { populate: ['owner', 'tags'] },
     );
 
-    return posts.map((post) => new PostDTO(post.toJSON()));
+    return posts.map((post) => post.toJSON());
   }
 
-  async search(keyword: string): Promise<PostDTO[]> {
-    const foundPosts = await this.postRepository.find(
+  async search(keyword: string): Promise<Post[]> {
+    return await this.postRepository.find(
       {
         $or: [{ title: { $ilike: keyword } }, { content: { $ilike: keyword } }],
       },
       { populate: ['owner', 'tags'] },
     );
-    return foundPosts.map((foundPost) => new PostDTO(foundPost.toJSON()));
   }
 }

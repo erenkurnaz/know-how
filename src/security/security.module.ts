@@ -10,7 +10,6 @@ import { HashService, TokenService } from './services';
 
 @Module({
   imports: [
-    RefreshTokenModule,
     UserModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -21,6 +20,7 @@ import { HashService, TokenService } from './services';
         },
       }),
     }),
+    RefreshTokenModule,
   ],
   providers: [
     HashService,

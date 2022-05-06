@@ -1,30 +1,25 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
+import { Post, PostDTO } from '@database/post';
 import { User } from '@database/user';
 import { CurrentUser, Public } from '@api/decorators';
 import { PostService } from './post.service';
-import {
-  PostDTO,
-  PostInput,
-  PostUpdateResult,
-  PostCreateResult,
-  PostDeleteResult,
-} from './dto';
+import { PostInput } from './dto';
 
-@Resolver(() => PostDTO)
+@Resolver(() => Post)
 export class PostResolver {
   constructor(private readonly postService: PostService) {}
 
-  @Mutation(() => PostCreateResult)
-  async postCreate(
+  @Mutation(() => Post)
+  async createPost(
     @CurrentUser() user: User,
     @Args('input') postDto: PostInput,
   ): Promise<PostDTO> {
     return await this.postService.create(user, postDto);
   }
 
-  @Mutation(() => PostUpdateResult)
-  async postUpdate(
+  @Mutation(() => Post)
+  async updatePost(
     @CurrentUser('id') userId: string,
     @Args('id') id: string,
     @Args('input') postDto: PostInput,
@@ -32,8 +27,8 @@ export class PostResolver {
     return await this.postService.update(id, postDto, userId);
   }
 
-  @Mutation(() => PostDeleteResult)
-  async postDelete(
+  @Mutation(() => Post)
+  async deletePost(
     @CurrentUser('id') userId: string,
     @Args('id') id: string,
   ): Promise<PostDTO> {
@@ -41,25 +36,25 @@ export class PostResolver {
   }
 
   @Public()
-  @Query(() => [PostDTO])
+  @Query(() => [Post])
   async postSearch(@Args('keyword') keyword: string) {
     return await this.postService.search(keyword);
   }
 
   @Public()
-  @Query(() => PostDTO)
+  @Query(() => Post)
   async post(@Args('id') id: string): Promise<PostDTO> {
     return await this.postService.findById(id);
   }
 
   @Public()
-  @Query(() => [PostDTO])
+  @Query(() => [Post])
   async posts(): Promise<PostDTO[]> {
     return await this.postService.findAll();
   }
 
   @Public()
-  @Query(() => [PostDTO])
+  @Query(() => [Post])
   async postsByUserId(@Args('userId') userId: string): Promise<PostDTO[]> {
     return await this.postService.findByUserId(userId);
   }

@@ -15,7 +15,7 @@ import {
   postDeleteMutation,
   postCreateMutation,
 } from '../utils/graphql/mutations';
-import { IPost, IUser } from '../utils/graphql/object-types';
+import { IUser } from '../utils/graphql/object-types';
 
 describe('Post', () => {
   let USER: IUser;
@@ -31,7 +31,7 @@ describe('Post', () => {
   it('should create and return created post', async () => {
     const TAG = await createTag(ACCESS_TOKEN);
 
-    const post = await postCreateMutation<IPost>(
+    const post = await postCreateMutation(
       {
         input: {
           title: 'title',
@@ -86,7 +86,7 @@ describe('Post', () => {
     const TAG = await createTag(ACCESS_TOKEN);
     const POST = await createPost(ACCESS_TOKEN);
 
-    const updatedPost = await postUpdateMutation<IPost>(
+    const updatedPost = await postUpdateMutation(
       {
         id: POST.id,
         input: { title: 'new_title', content: 'new_content', tagIds: [TAG.id] },
@@ -106,7 +106,7 @@ describe('Post', () => {
   it('should delete and return success status', async () => {
     const POST = await createPost(ACCESS_TOKEN);
 
-    const deletedPost = await postDeleteMutation<IPost>(
+    const deletedPost = await postDeleteMutation(
       {
         id: POST.id,
       },

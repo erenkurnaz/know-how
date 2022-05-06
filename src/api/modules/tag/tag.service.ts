@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Tag, TagRepository } from '@database/tag';
+import { Tag, TagDTO, TagRepository } from '@database/tag';
 import { User, UserRepository } from '@database/user';
 import { UserNotFoundException } from '@api/modules/auth/errors';
 
@@ -10,7 +10,7 @@ export class TagService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async findAll(userId?: string) {
+  async findAll(userId?: string): Promise<TagDTO[]> {
     const tags = await this.tagRepository.findAll();
     const user = await this.getUser(userId);
 

@@ -1,11 +1,11 @@
-import { IErrorableResult, IPost, POST_FRAGMENT } from '../object-types';
+import { IPost, POST_FRAGMENT } from '../object-types';
 import { GqlClient, gql } from '../graphql.helper';
 
 export const CREATE_POST_MUTATION = {
-  name: 'postCreate',
+  name: 'createPost',
   query: gql`
     mutation ($input: PostInput!) {
-      postCreate(input: $input) {
+      createPost(input: $input) {
         ...PostFields
       }
     }
@@ -19,15 +19,11 @@ interface ICreatePostInput {
   tagIds: string[];
 }
 
-type IPostCreateResult = IErrorableResult<IPost>;
-
-export const postCreateMutation = async <
-  T extends IPostCreateResult = IPostCreateResult,
->(
+export const postCreateMutation = async (
   variables: { input: ICreatePostInput },
   token: string,
-): Promise<T> => {
-  const client = new GqlClient<T>(CREATE_POST_MUTATION, variables);
+): Promise<IPost> => {
+  const client = new GqlClient<IPost>(CREATE_POST_MUTATION, variables);
   if (token) client.withAuthentication(token);
 
   const result = await client.execute();

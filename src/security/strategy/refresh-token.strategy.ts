@@ -6,6 +6,7 @@ import { Request } from 'express';
 
 import { IConfig } from '@config/configuration';
 import { RefreshTokenRepository } from '@database/refresh-token';
+import { UserDTO } from '@database/user/user.entity';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
@@ -24,7 +25,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(request: Request) {
+  async validate(request: Request): Promise<UserDTO> {
     const token = request.get('authorization')?.replace('Bearer ', '');
 
     const refreshToken = await this.refreshTokenRepository.findOne(

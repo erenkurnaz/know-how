@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
+import { wrap } from '@mikro-orm/core';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { IConfig } from '@config/configuration';
@@ -31,6 +32,6 @@ export class AccessTokenStrategy extends PassportStrategy(
     );
     if (!user) throw new UnauthorizedException();
 
-    return user.toJSON();
+    return wrap(user).toObject();
   }
 }

@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { User, UserRepository } from '@database/user';
+import { User } from '@database/user';
 import { RefreshToken, RefreshTokenRepository } from '@database/refresh-token';
 import { IConfig } from '@config/configuration';
-import { EntityDTO } from '@mikro-orm/core';
 
 export interface TokenPayload {
   id: string;
@@ -24,39 +23,32 @@ export class TokenService {
     private readonly config: ConfigService<IConfig, true>,
     private readonly jwtService: JwtService,
     private readonly refreshTokenRepository: RefreshTokenRepository,
-    private readonly userRepository: UserRepository,
   ) {}
 
-  public async generateRefreshToken(payload: TokenPayload): Promise<string> {
+  public async generateRefreshToken(user: User): Promise<string> {
     const token = await this.jwtService.signAsync(
-      { ...payload },
+      TokenService.mapPayload(user),
       {
         expiresIn: this.refreshTokenExpires,
       },
     );
-    await this.saveRefreshToken(payload.id, token);
+    await this.saveRefreshToken(user, token);
 
     return token;
   }
 
-  public async generateAccessToken(payload: TokenPayload): Promise<string> {
-    return await this.jwtService.signAsync(
-      { ...payload },
-      {
-        expiresIn: this.accessTokenExpires,
-      },
-    );
+  public async generateAccessToken(user: User): Promise<string> {
+    return await this.jwtService.signAsync(TokenService.mapPayload(user), {
+      expiresIn: this.accessTokenExpires,
+    });
   }
 
-  private static mapPayload({ id, email }: EntityDTO<User>): TokenPayload {
+  private static mapPayload({ id, email }: User): TokenPayload {
     return { id, email };
   }
 
-  private async saveRefreshToken(userId: string, token: string): Promise<void> {
-    const exists = await this.refreshTokenRepository.findOne({
-      user: { id: userId },
-    });
-    const user = await this.userRepository.findOneOrFail({ id: userId });
+  private async saveRefreshToken(user: User, token: string): Promise<void> {
+    const exists = await this.refreshTokenRepository.findOne({ user });
 
     const refreshToken = exists ?? new RefreshToken();
     refreshToken.user = user;

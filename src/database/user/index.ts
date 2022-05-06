@@ -1,3 +1,3 @@
-export * from './user.entity';
-export * from './user.repository';
-export * from './user.module';
+export { User } from './user.entity';
+export { UserRepository } from './user.repository';
+export { UserModule } from './user.module';
