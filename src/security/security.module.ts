@@ -3,8 +3,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 import { IConfig } from '@config/configuration';
-import { RefreshTokenModule } from '@entities/refresh-token';
-import { UserModule } from '@entities/user';
+import { RefreshTokenModule } from '@database/refresh-token';
+import { UserModule } from '@database/user';
 import { AccessTokenStrategy, RefreshTokenStrategy } from './strategy';
 import { HashService, TokenService } from './services';
 

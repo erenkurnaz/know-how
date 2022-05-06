@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
-import { UserModule } from '@entities/user';
-import { PostModule } from '@entities/post';
-import { TagModule } from '@entities/tag';
+import { UserModule } from '@database/user';
+import { PostModule } from '@database/post';
+import { TagModule } from '@database/tag';
 import { SecurityModule } from '@security/security.module';
 import { AccessTokenGuard } from '@security/guards';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { ClassValidationPipe } from './pipes/validation.pipe';
-import { UserResolver, UserService } from './resolvers/user';
-import { AuthResolver, AuthService } from './resolvers/auth';
-import { PostResolver, PostService } from './resolvers/post';
-import { TagResolver, TagService } from './resolvers/tag';
+import { UserResolver, UserService } from './modules/user';
+import { AuthResolver, AuthService } from './modules/auth';
+import { PostResolver, PostService } from './modules/post';
+import { TagResolver, TagService } from './modules/tag';
+
 @Module({
   imports: [SecurityModule, UserModule, PostModule, TagModule],
   providers: [

@@ -5,7 +5,7 @@ import { wrap } from '@mikro-orm/core';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { IConfig } from '@config/configuration';
-import { UserRepository } from '@entities/user';
+import { UserRepository } from '@database/user';
 import { TokenPayload } from '../services/token.service';
 
 @Injectable()

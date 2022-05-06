@@ -25,7 +25,7 @@
       "@pipes/*": ["./src/core/pipes/*"],
       "@config/*": ["./src/config/*"],
       "@api/*": ["./src/api/*"],
-      "@entities/*": ["./src/entities/*"],
+      "@database/*": ["./src/database/*"],
       "@security/*": ["./src/security/*"],
       "@utils/*": ["./src/utils/*"],
       "@mocks/*": ["./test/mocks/*"],
