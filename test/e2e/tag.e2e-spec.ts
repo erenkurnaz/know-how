@@ -8,7 +8,7 @@ import {
   tagUnfavoriteMutation,
 } from '../utils/graphql/mutations';
 import { tagsQuery } from '../utils/graphql/queries';
-import { ITag } from '../utils/graphql/object-types';
+import { IServerError, ITag } from '../utils/graphql/object-types';
 
 describe('Tags', () => {
   let ACCESS_TOKEN: string;
@@ -35,6 +35,20 @@ describe('Tags', () => {
         isFavorite: true,
       });
     });
+
+    it('should fail if tag already in favorites', async () => {
+      const favoriteTag = await tagFavoriteMutation<ITag>(
+        { id: INITIAL_TAG.id },
+        ACCESS_TOKEN,
+      );
+      const error = await tagFavoriteMutation<IServerError>(
+        { id: favoriteTag.id },
+        ACCESS_TOKEN,
+      );
+
+      expect(error.status).toEqual(500);
+      expect(error.message).toContain('Tag already added to favorites');
+    });
   });
 
   describe('when user remove tag from favorite', () => {
@@ -51,6 +65,16 @@ describe('Tags', () => {
 
       expect(FAVORITED_TAG.isFavorite).toEqual(true);
       expect(unfavoritedTag.isFavorite).toEqual(false);
+    });
+
+    it('should fail if tag not in favorites', async () => {
+      const error = await tagUnfavoriteMutation<IServerError>(
+        { id: INITIAL_TAG.id },
+        ACCESS_TOKEN,
+      );
+
+      expect(error.status).toEqual(500);
+      expect(error.message).toContain('Tag not in favorites');
     });
   });
 

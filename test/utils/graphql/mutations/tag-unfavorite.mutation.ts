@@ -1,4 +1,9 @@
-import { IServerError, ITag, TAG_FRAGMENT } from '../object-types';
+import {
+  IServerError,
+  ITag,
+  SERVER_ERROR_FRAGMENT,
+  TAG_FRAGMENT,
+} from '../object-types';
 import { gql, GqlClient } from '../graphql.helper';
 
 export const UNFAVORITE_TAG_MUTATION = {
@@ -6,10 +11,16 @@ export const UNFAVORITE_TAG_MUTATION = {
   query: gql`
     mutation ($id: String!) {
       tagUnfavorite(id: $id) {
-        ...TagFields
+        ... on Tag {
+          ...TagFields
+        }
+        ... on ServerError {
+          ...ServerErrorFields
+        }
       }
     }
     ${TAG_FRAGMENT}
+    ${SERVER_ERROR_FRAGMENT}
   `,
 };
 

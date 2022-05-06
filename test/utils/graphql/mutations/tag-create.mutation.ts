@@ -2,7 +2,9 @@ import {
   IServerError,
   ITag,
   IValidationError,
+  SERVER_ERROR_FRAGMENT,
   TAG_FRAGMENT,
+  VALIDATION_ERROR_FRAGMENT,
 } from '../object-types';
 import { gql, GqlClient } from '../graphql.helper';
 
@@ -11,10 +13,20 @@ export const TAG_CREATE_MUTATION = {
   query: gql`
     mutation ($name: String!) {
       tagCreate(name: $name) {
-        ...TagFields
+        ... on Tag {
+          ...TagFields
+        }
+        ... on ValidationError {
+          ...ValidationErrorFields
+        }
+        ... on ServerError {
+          ...ServerErrorFields
+        }
       }
     }
     ${TAG_FRAGMENT}
+    ${VALIDATION_ERROR_FRAGMENT}
+    ${SERVER_ERROR_FRAGMENT}
   `,
 };
 

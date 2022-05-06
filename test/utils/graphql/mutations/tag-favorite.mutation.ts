@@ -1,7 +1,7 @@
 import {
   IServerError,
   ITag,
-  IValidationError,
+  SERVER_ERROR_FRAGMENT,
   TAG_FRAGMENT,
 } from '../object-types';
 import { gql, GqlClient } from '../graphql.helper';
@@ -11,16 +11,22 @@ export const TAG_FAVORITE_MUTATION = {
   query: gql`
     mutation ($id: String!) {
       tagFavorite(id: $id) {
-        ...TagFields
+        ... on Tag {
+          ...TagFields
+        }
+        ... on ServerError {
+          ...ServerErrorFields
+        }
       }
     }
     ${TAG_FRAGMENT}
+    ${SERVER_ERROR_FRAGMENT}
   `,
 };
 
 type ITagFavoriteInput = { id: string };
 
-type ITagFavoriteResult = ITag | IServerError | IValidationError;
+type ITagFavoriteResult = ITag | IServerError;
 
 export const tagFavoriteMutation = async <
   T extends ITagFavoriteResult = ITagFavoriteResult,
