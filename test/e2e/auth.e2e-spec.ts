@@ -19,8 +19,8 @@ describe('User authentication', () => {
     USER = createUserMock();
   });
 
-  describe('when user register', () => {
-    it('should register successfully', async () => {
+  describe('when user sign up', () => {
+    it('should sign up successfully', async () => {
       const authResult = await signUpMutation<IAuthResult>({
         input: {
           email: USER.email,
@@ -82,8 +82,8 @@ describe('User authentication', () => {
     });
   });
 
-  describe('when user login', () => {
-    it('should login successfully', async () => {
+  describe('when user sign in', () => {
+    it('should sign in successfully', async () => {
       await authorizeUser(USER);
 
       const authResult = await signInMutation<IAuthResult>({

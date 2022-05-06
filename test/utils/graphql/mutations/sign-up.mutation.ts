@@ -8,11 +8,11 @@ import {
   VALIDATION_ERROR_FRAGMENT,
 } from '../object-types';
 
-export const REGISTER_MUTATION = {
-  name: 'register',
+export const SIGN_UP_MUTATION = {
+  name: 'signUp',
   query: gql`
-    mutation ($input: RegisterInput!) {
-      register(input: $input) {
+    mutation ($input: SignUpInput!) {
+      signUp(input: $input) {
         ... on AuthResult {
           user {
             ...UserFields
@@ -34,7 +34,7 @@ export const REGISTER_MUTATION = {
   `,
 };
 
-export interface IRegisterInput {
+export interface ISignUpInput {
   input: {
     email: string;
     password: string;
@@ -42,15 +42,13 @@ export interface IRegisterInput {
   };
 }
 
-type IRegisterResult = IAuthResult | IServerError | IValidationError;
+type ISignUpResult = IAuthResult | IServerError | IValidationError;
 
-export const signUpMutation = async <
-  T extends IRegisterResult = IRegisterResult,
->(
-  variables: IRegisterInput,
+export const signUpMutation = async <T extends ISignUpResult = ISignUpResult>(
+  variables: ISignUpInput,
 ): Promise<T> => {
   const response = await new GqlClient<T>(
-    REGISTER_MUTATION,
+    SIGN_UP_MUTATION,
     variables,
   ).execute();
 

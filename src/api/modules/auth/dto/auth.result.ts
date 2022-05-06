@@ -21,7 +21,6 @@ export class AuthResult {
   }
 }
 
-export const ErrorableAuthResult = createErrorableUnion(
-  'ErrorableAuthResult',
-  AuthResult,
-);
+export const SignInResult = createErrorableUnion('SignInResult', AuthResult);
+
+export const SignUpResult = createErrorableUnion('SignUpResult', AuthResult);

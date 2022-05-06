@@ -8,11 +8,11 @@ import {
 } from '../object-types';
 import { gql, GqlClient } from '../graphql.helper';
 
-export const LOGIN_MUTATION = {
-  name: 'login',
+export const SIGN_IN_MUTATION = {
+  name: 'signIn',
   query: gql`
-    mutation ($input: LoginInput!) {
-      login(input: $input) {
+    mutation ($input: SignInInput!) {
+      signIn(input: $input) {
         ... on AuthResult {
           user {
             ...UserFields
@@ -41,12 +41,15 @@ export interface ILoginInput {
   };
 }
 
-type ILoginResult = IAuthResult | IValidationError | IServerError;
+type ISignInResult = IAuthResult | IValidationError | IServerError;
 
-export const signInMutation = async <T extends ILoginResult = ILoginResult>(
+export const signInMutation = async <T extends ISignInResult = ISignInResult>(
   variables: ILoginInput,
 ): Promise<T> => {
-  const response = await new GqlClient<T>(LOGIN_MUTATION, variables).execute();
+  const response = await new GqlClient<T>(
+    SIGN_IN_MUTATION,
+    variables,
+  ).execute();
 
   return response.data;
 };
