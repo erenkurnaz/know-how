@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserRepository } from '@database/user';
 import { UserNotFoundException } from '@api/modules/auth/errors';
 import { wrap } from '@mikro-orm/core';
