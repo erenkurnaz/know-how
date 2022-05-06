@@ -94,9 +94,9 @@ export class PostService {
     const foundPosts = await this.postRepository.find(
       {
         $or: [
-          { title: { $ilike: keyword } },
-          { content: { $ilike: keyword } },
-          { tags: { name: { $ilike: keyword } } },
+          { title: { $ilike: `%${keyword}%` } },
+          { content: { $ilike: `%${keyword}%` } },
+          { tags: { name: { $ilike: `%${keyword}%` } } },
         ],
       },
       { populate: ['owner', 'tags'] },

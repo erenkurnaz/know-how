@@ -16,7 +16,6 @@ lerna-debug.log*
 
 #environment
 .env
-.env.test
 .env.local
 
 # Tests
