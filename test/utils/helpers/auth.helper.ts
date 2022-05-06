@@ -1,7 +1,5 @@
-import { IAuthResult } from '../graphql/object-types';
-import { IUser } from '../graphql/object-types';
-import { signUpMutation } from '../graphql/mutations/sign-up.mutation';
-import { signInMutation } from '../graphql/mutations/sign-in.mutation';
+import { IAuthResult, IUser } from '../graphql/object-types';
+import { signUpMutation, signInMutation } from '../graphql/mutations';
 
 export const authorizeUser = async (user: IUser): Promise<IAuthResult> => {
   await signUpMutation({

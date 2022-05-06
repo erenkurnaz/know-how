@@ -1,5 +1,5 @@
-import { TAG_FRAGMENT } from '../object-types';
-import { gql } from '../graphql.helper';
+import { ITag, TAG_FRAGMENT } from '../object-types';
+import { gql, GqlClient } from '../graphql.helper';
 
 export const TAGS_QUERY = {
   name: 'tags',
@@ -11,4 +11,9 @@ export const TAGS_QUERY = {
     }
     ${TAG_FRAGMENT}
   `,
+};
+
+export const tagsQuery = async (): Promise<ITag[]> => {
+  const result = await new GqlClient<ITag[]>(TAGS_QUERY).execute();
+  return result.data;
 };

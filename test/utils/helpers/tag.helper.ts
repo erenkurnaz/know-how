@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker';
 import { ITag } from '../graphql/object-types';
-import { tagCreateMutation } from '../graphql/mutations/create-tag-mutation';
+import { tagCreateMutation } from '../graphql/mutations';
 
 export const createTag = async (accessToken: string): Promise<ITag> => {
   return await tagCreateMutation(

@@ -6,7 +6,7 @@ export const createPost = async (
   accessToken: string,
   tagIds?: string[],
 ): Promise<IPost> => {
-  const createdPost = await postCreateMutation(
+  return await postCreateMutation(
     {
       input: {
         title: faker.random.words(4),
@@ -16,6 +16,4 @@ export const createPost = async (
     },
     accessToken,
   );
-
-  return createdPost;
 };

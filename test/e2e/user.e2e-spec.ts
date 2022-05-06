@@ -1,13 +1,8 @@
 import { HttpStatus } from '@nestjs/common';
 import { clearDatabase } from '../utils/helpers/app.helper';
-
 import { createUserMock } from '../utils/helpers/user.helper';
 import { authorizeUser } from '../utils/helpers/auth.helper';
-import {
-  IServerError,
-  IUser,
-  IValidationError,
-} from '../utils/graphql/object-types';
+import { IUser, IValidationError } from '../utils/graphql/object-types';
 import {
   userFollowMutation,
   userUnfollowMutation,
