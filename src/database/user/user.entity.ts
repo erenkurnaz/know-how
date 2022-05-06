@@ -43,7 +43,6 @@ export class User extends Base<User> {
     joinColumn: 'follower',
     inverseJoinColumn: 'following',
     owner: true,
-    hidden: true,
   })
   followers = new Collection<User>(this);
 
@@ -51,7 +50,6 @@ export class User extends Base<User> {
   @ManyToMany({
     entity: () => User,
     mappedBy: (user) => user.followers,
-    hidden: true,
   })
   followings = new Collection<User>(this);
 

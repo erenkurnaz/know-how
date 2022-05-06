@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { User } from '@database/user';
+import { User, UserDTO } from '@database/user';
 import { RefreshTokenGuard } from '@security/guards';
 import { TokenService } from '@security/services';
 import { CurrentUser, Public } from '@api/decorators';
@@ -45,11 +45,13 @@ export class AuthResolver {
   @Public()
   @Query(() => RefreshResult)
   @UseGuards(RefreshTokenGuard)
-  async refreshAccessToken(@CurrentUser() user: User): Promise<RefreshResult> {
+  async refreshAccessToken(
+    @CurrentUser() user: UserDTO,
+  ): Promise<RefreshResult> {
     const accessToken = await this.tokenService.generateAccessToken(user);
 
     return new RefreshResult({
-      user: user.toJSON(),
+      user: user,
       accessToken,
     });
   }

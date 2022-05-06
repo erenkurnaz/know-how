@@ -10,7 +10,10 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async findById(id: string): Promise<UserDTO> {
-    const foundUser = await this.userRepository.findOne({ id });
+    const foundUser = await this.userRepository.findOne(
+      { id },
+      { populate: ['followings', 'followers', 'favoriteTags'] },
+    );
     if (!foundUser) throw new UserNotFoundException();
 
     return foundUser.toJSON();

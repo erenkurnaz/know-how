@@ -34,6 +34,6 @@ export class RefreshTokenStrategy extends PassportStrategy(
     );
     if (!refreshToken) throw new UnauthorizedException();
 
-    return refreshToken.user.toJSON();
+    return refreshToken.user.toObject();
   }
 }
