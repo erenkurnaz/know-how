@@ -40,6 +40,11 @@ export class PostResolver {
     return await this.postService.delete(id, userId);
   }
 
+  @Query(() => [Post])
+  async feed(@CurrentUser('id') userId: string): Promise<PostDTO[]> {
+    return await this.postService.getFeed(userId);
+  }
+
   @Public()
   @Query(() => [Post])
   async postSearch(@Args('keyword') keyword: string): Promise<PostDTO[]> {
