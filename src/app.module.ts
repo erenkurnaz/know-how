@@ -11,6 +11,7 @@ import { MikroORM } from '@mikro-orm/core';
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
       load: [configuration],
       isGlobal: true,
     }),
