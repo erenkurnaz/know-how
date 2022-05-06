@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { User, UserRepository } from '@database/user';
+import { UserRepository } from '@database/user';
 import { RefreshToken, RefreshTokenRepository } from '@database/refresh-token';
 import { IConfig } from '@config/configuration';
 
