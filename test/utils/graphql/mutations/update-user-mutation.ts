@@ -1,10 +1,10 @@
+import { gql } from '../graphql.helper';
 import {
   IUser,
+  SERVER_ERROR_FRAGMENT,
   USER_FRAGMENT,
   VALIDATION_ERROR_FRAGMENT,
-  SERVER_ERROR_FRAGMENT,
-} from '../types';
-import { gql } from '../../helpers/app.helper';
+} from '../object-types';
 
 export const UPDATE_USER_MUTATION = {
   name: 'updateUser',

@@ -1,5 +1,5 @@
-import { TAG_FRAGMENT } from '../types/tag-type';
-import { gql } from '../../helpers/app.helper';
+import { TAG_FRAGMENT } from '../object-types';
+import { gql } from '../graphql.helper';
 
 export const TAGS_QUERY = {
   name: 'tags',

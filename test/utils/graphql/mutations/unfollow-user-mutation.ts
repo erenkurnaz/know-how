@@ -1,5 +1,5 @@
-import { gql } from '../../helpers/app.helper';
-import { USER_FRAGMENT } from '../types';
+import { gql } from '../graphql.helper';
+import { USER_FRAGMENT } from '../object-types';
 
 export const UNFOLLOW_USER_MUTATION = {
   name: 'unfollowUser',

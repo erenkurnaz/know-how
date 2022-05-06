@@ -1,10 +1,21 @@
-import { GqlBuilder, IUser } from '../utils/graphql';
 import { clearDatabase } from '../utils/helpers/app.helper';
 import { authorizeUser } from '../utils/helpers/auth.helper';
 import { createUserMock } from '../utils/helpers/user.helper';
-import { IPost } from '../utils/graphql/types/post-type';
 import { createPost } from '../utils/helpers/post.helper';
 import { createTag } from '../utils/helpers/tag.helper';
+
+import {
+  postsByUserIdQuery,
+  postQuery,
+  postSearchQuery,
+  postsQuery,
+} from '../utils/graphql/queries';
+import {
+  postUpdateMutation,
+  postDeleteMutation,
+  postCreateMutation,
+} from '../utils/graphql/mutations';
+import { IUser } from '../utils/graphql/object-types';
 
 describe('Post', () => {
   let USER: IUser;
@@ -20,16 +31,16 @@ describe('Post', () => {
   it('should create and return created post', async () => {
     const TAG = await createTag(ACCESS_TOKEN);
 
-    const { data: post } = await new GqlBuilder<IPost>()
-      .setMutation('CREATE_POST_MUTATION', {
+    const post = await postCreateMutation(
+      {
         input: {
           title: 'title',
           content: 'content',
           tagIds: [TAG.id],
         },
-      })
-      .withAuthentication(ACCESS_TOKEN)
-      .execute();
+      },
+      ACCESS_TOKEN,
+    );
 
     expect(post.title).toEqual('title');
     expect(post.content).toEqual('content');
@@ -38,11 +49,9 @@ describe('Post', () => {
   });
 
   it('should return all posts', async () => {
-    const { data } = await new GqlBuilder()
-      .setQuery('POSTS_QUERY', null)
-      .execute();
+    const posts = await postsQuery();
 
-    expect(data).toEqual([]);
+    expect(posts).toEqual([]);
   });
 
   it('should return posts by search keyword', async () => {
@@ -52,9 +61,7 @@ describe('Post', () => {
       createPost(ACCESS_TOKEN),
     ]);
 
-    const { data: posts } = await new GqlBuilder<IPost[]>()
-      .setQuery('POST_SEARCH_QUERY', { keyword: POST_1.content })
-      .execute();
+    const posts = await postSearchQuery({ keyword: POST_1.content });
 
     expect(posts).toEqual([POST_1]);
   });
@@ -62,9 +69,7 @@ describe('Post', () => {
   it('should return posts by userId', async () => {
     const POST = await createPost(ACCESS_TOKEN);
 
-    const { data: posts } = await new GqlBuilder<IPost[]>()
-      .setQuery('POSTS_BY_USER_ID_QUERY', { userId: USER.id })
-      .execute();
+    const posts = await postsByUserIdQuery({ userId: USER.id });
 
     expect(posts).toEqual([POST]);
   });
@@ -72,9 +77,7 @@ describe('Post', () => {
   it('should return post by id', async () => {
     const POST = await createPost(ACCESS_TOKEN);
 
-    const { data: post } = await new GqlBuilder<IPost>()
-      .setQuery('POST_QUERY', { id: POST.id })
-      .execute();
+    const post = await postQuery({ id: POST.id });
 
     expect(post).toMatchObject(POST);
   });
@@ -83,13 +86,13 @@ describe('Post', () => {
     const TAG = await createTag(ACCESS_TOKEN);
     const POST = await createPost(ACCESS_TOKEN);
 
-    const { data: updatedPost } = await new GqlBuilder<IPost>()
-      .setMutation('UPDATE_POST_MUTATION', {
+    const updatedPost = await postUpdateMutation(
+      {
         id: POST.id,
         input: { title: 'new_title', content: 'new_content', tagIds: [TAG.id] },
-      })
-      .withAuthentication(ACCESS_TOKEN)
-      .execute();
+      },
+      ACCESS_TOKEN,
+    );
 
     expect(updatedPost).toEqual({
       ...POST,
@@ -103,10 +106,12 @@ describe('Post', () => {
   it('should delete and return success status', async () => {
     const POST = await createPost(ACCESS_TOKEN);
 
-    const { data: deletedPost } = await new GqlBuilder<IPost>()
-      .setMutation('DELETE_POST_MUTATION', { id: POST.id })
-      .withAuthentication(ACCESS_TOKEN)
-      .execute();
+    const deletedPost = await postDeleteMutation(
+      {
+        id: POST.id,
+      },
+      ACCESS_TOKEN,
+    );
 
     expect(deletedPost).toEqual(POST);
   });

@@ -1,9 +1,12 @@
+import { gql, GqlClient } from '../graphql.helper';
 import {
+  IAuthResult,
+  IServerError,
+  IValidationError,
   SERVER_ERROR_FRAGMENT,
   USER_FRAGMENT,
   VALIDATION_ERROR_FRAGMENT,
-} from '../types';
-import { gql } from '../../helpers/app.helper';
+} from '../object-types';
 
 export const REGISTER_MUTATION = {
   name: 'register',
@@ -38,3 +41,18 @@ export interface IRegisterInput {
     fullName: string;
   };
 }
+
+type IRegisterResult = IAuthResult | IServerError | IValidationError;
+
+export const registerMutation = async <
+  T extends IRegisterResult = IRegisterResult,
+>(
+  variables: IRegisterInput,
+): Promise<T> => {
+  const response = await new GqlClient<T>(
+    REGISTER_MUTATION,
+    variables,
+  ).execute();
+
+  return response.data;
+};

@@ -1,5 +1,6 @@
-import { POST_FRAGMENT } from '../types/post-type';
-import { gql } from '../../helpers/app.helper';
+import { POST_FRAGMENT } from '../object-types';
+import { gql, GqlClient } from '../graphql.helper';
+import { IPost } from '../object-types';
 
 export const POSTS_QUERY = {
   name: 'posts',
@@ -11,4 +12,10 @@ export const POSTS_QUERY = {
     }
     ${POST_FRAGMENT}
   `,
+};
+
+export const postsQuery = async (): Promise<IPost[]> => {
+  const result = await new GqlClient<IPost[]>(POSTS_QUERY).execute();
+
+  return result.data;
 };

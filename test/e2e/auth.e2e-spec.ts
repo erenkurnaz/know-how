@@ -1,15 +1,16 @@
 import { HttpStatus } from '@nestjs/common';
+import {
+  IServerError,
+  IUser,
+  IValidationError,
+} from 'test/utils/graphql/object-types';
 import { clearDatabase } from '../utils/helpers/app.helper';
 
-import {
-  IAuthResult,
-  IUser,
-  IServerError,
-  IValidationError,
-  GqlBuilder,
-} from '../utils/graphql';
 import { authorizeUser } from '../utils/helpers/auth.helper';
 import { createUserMock } from '../utils/helpers/user.helper';
+import { registerMutation } from '../utils/graphql/mutations/register-mutation';
+import { IAuthResult } from '../utils/graphql/types';
+import { loginMutation } from '../utils/graphql/mutations/login-mutation';
 
 describe('User authentication', () => {
   let USER: IUser;
@@ -21,17 +22,13 @@ describe('User authentication', () => {
 
   describe('when user register', () => {
     it('should register successfully', async () => {
-      const response = await new GqlBuilder()
-        .setMutation('REGISTER_MUTATION', {
-          input: {
-            email: USER.email,
-            password: USER.password,
-            fullName: USER.fullName,
-          },
-        })
-        .execute();
-
-      const authResult = response.data as IAuthResult;
+      const authResult = await registerMutation<IAuthResult>({
+        input: {
+          email: USER.email,
+          password: USER.password,
+          fullName: USER.fullName,
+        },
+      });
 
       authResultExpects(authResult, USER);
     });
@@ -42,18 +39,15 @@ describe('User authentication', () => {
         email: USER.email,
       });
 
-      const response = await new GqlBuilder()
-        .setMutation('REGISTER_MUTATION', {
-          input: {
-            email: user.email,
-            password: user.password,
-            fullName: user.fullName,
-          },
-        })
-        .execute();
-      const validationError = response.data as IServerError;
+      const errorResponse = await registerMutation<IServerError>({
+        input: {
+          email: user.email,
+          password: user.password,
+          fullName: user.fullName,
+        },
+      });
 
-      expect(validationError).toEqual({
+      expect(errorResponse).toEqual({
         name: 'UserExistsException',
         message: expect.any(String),
         status: HttpStatus.CONFLICT,
@@ -63,16 +57,13 @@ describe('User authentication', () => {
     it('should fail with invalid email', async () => {
       const user = createUserMock({ email: 'invalid_email' });
 
-      const response = await new GqlBuilder()
-        .setMutation('REGISTER_MUTATION', {
-          input: {
-            email: user.email,
-            password: user.password,
-            fullName: user.fullName,
-          },
-        })
-        .execute();
-      const validationError = response.data as IValidationError;
+      const validationError = await registerMutation<IValidationError>({
+        input: {
+          email: user.email,
+          password: user.password,
+          fullName: user.fullName,
+        },
+      });
 
       validationErrorExpects(validationError, 'email');
     });
@@ -80,16 +71,13 @@ describe('User authentication', () => {
     it('should fail with invalid password', async () => {
       const user = createUserMock({ password: 'inv_pwd' });
 
-      const response = await new GqlBuilder()
-        .setMutation('REGISTER_MUTATION', {
-          input: {
-            email: user.email,
-            password: user.password,
-            fullName: user.fullName,
-          },
-        })
-        .execute();
-      const validationError = response.data as IValidationError;
+      const validationError = await registerMutation<IValidationError>({
+        input: {
+          email: user.email,
+          password: user.password,
+          fullName: user.fullName,
+        },
+      });
 
       validationErrorExpects(validationError, 'password');
     });
@@ -99,15 +87,12 @@ describe('User authentication', () => {
     it('should login successfully', async () => {
       await authorizeUser(USER);
 
-      const response = await new GqlBuilder()
-        .setMutation('LOGIN_MUTATION', {
-          input: {
-            email: USER.email,
-            password: USER.password,
-          },
-        })
-        .execute();
-      const authResult = response.data as IAuthResult;
+      const authResult = await loginMutation<IAuthResult>({
+        input: {
+          email: USER.email,
+          password: USER.password,
+        },
+      });
 
       authResultExpects(authResult, USER);
     });
@@ -115,15 +100,12 @@ describe('User authentication', () => {
     it('should fail with incorrect email', async () => {
       await authorizeUser(USER);
 
-      const response = await new GqlBuilder()
-        .setMutation('LOGIN_MUTATION', {
-          input: {
-            email: 'incorrect@mail.com',
-            password: USER.password,
-          },
-        })
-        .execute();
-      const credentialError = response.data as IServerError;
+      const credentialError = await loginMutation<IServerError>({
+        input: {
+          email: 'incorrect@mail.com',
+          password: USER.password,
+        },
+      });
 
       expect(credentialError).toEqual({
         name: 'UserNotFoundException',
@@ -135,15 +117,12 @@ describe('User authentication', () => {
     it('should fail with incorrect password', async () => {
       await authorizeUser(USER);
 
-      const response = await new GqlBuilder()
-        .setMutation('LOGIN_MUTATION', {
-          input: {
-            email: USER.email,
-            password: 'inv_pwd',
-          },
-        })
-        .execute();
-      const credentialError = response.data as IServerError;
+      const credentialError = await loginMutation<IServerError>({
+        input: {
+          email: USER.email,
+          password: 'inv_pwd',
+        },
+      });
 
       expect(credentialError).toEqual({
         name: 'InvalidCredentialsException',

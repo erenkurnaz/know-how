@@ -1,9 +1,12 @@
 import {
-  USER_FRAGMENT,
+  IAuthResult,
+  IServerError,
+  IValidationError,
   SERVER_ERROR_FRAGMENT,
+  USER_FRAGMENT,
   VALIDATION_ERROR_FRAGMENT,
-} from '../types';
-import { gql } from '../../helpers/app.helper';
+} from '../object-types';
+import { gql, GqlClient } from '../graphql.helper';
 
 export const LOGIN_MUTATION = {
   name: 'login',
@@ -37,3 +40,13 @@ export interface ILoginInput {
     password: string;
   };
 }
+
+type ILoginResult = IAuthResult | IValidationError | IServerError;
+
+export const loginMutation = async <T extends ILoginResult = ILoginResult>(
+  variables: ILoginInput,
+): Promise<T> => {
+  const response = await new GqlClient<T>(LOGIN_MUTATION, variables).execute();
+
+  return response.data;
+};

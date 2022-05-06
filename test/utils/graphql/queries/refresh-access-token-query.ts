@@ -1,5 +1,5 @@
-import { USER_FRAGMENT } from '../types';
-import { gql } from '../../helpers/app.helper';
+import { USER_FRAGMENT } from '../object-types';
+import { gql } from '../graphql.helper';
 
 export const REFRESH_ACCESS_TOKEN_QUERY = {
   name: 'refreshAccessToken',

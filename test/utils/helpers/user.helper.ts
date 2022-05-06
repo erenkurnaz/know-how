@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker';
 
-import { IUser } from '../graphql';
+import { IUser } from '../graphql/object-types';
 
 export function createUserMock(from?: Partial<IUser>): IUser {
   return {
