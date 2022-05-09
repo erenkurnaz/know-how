@@ -48,12 +48,6 @@ export class PostResolver {
   }
 
   @Public()
-  @Query(() => [Post])
-  async postSearch(@Args('keyword') keyword: string): Promise<PostDTO[]> {
-    return await this.postService.search(keyword);
-  }
-
-  @Public()
   @Query(() => Post)
   async post(@Args('id') id: string): Promise<PostDTO> {
     return await this.postService.findById(id);

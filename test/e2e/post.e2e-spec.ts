@@ -7,7 +7,6 @@ import { createTag } from '../utils/helpers/tag.helper';
 import {
   postsByUserIdQuery,
   postQuery,
-  postSearchQuery,
   postsQuery,
 } from '../utils/graphql/queries';
 import {
