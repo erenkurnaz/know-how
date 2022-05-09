@@ -64,8 +64,10 @@ describe('Post', () => {
     ]);
 
     const { posts, total } = await postsQuery({
-      limit: 2,
-      offset: 0,
+      pagination: {
+        limit: 2,
+        offset: 0,
+      },
     });
 
     expect(posts.length).toEqual(2);
@@ -79,9 +81,10 @@ describe('Post', () => {
       createPost(ACCESS_TOKEN),
     ]);
 
-    const posts = await postSearchQuery({ keyword: POST_1.content });
+    const result = await postsQuery({ keyword: POST_1.content });
 
-    expect(posts).toEqual([POST_1]);
+    expect(result.posts).toEqual([POST_1]);
+    expect(result.total).toEqual(1);
   });
 
   it('should return posts by userId', async () => {

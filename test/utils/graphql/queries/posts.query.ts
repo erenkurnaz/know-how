@@ -5,8 +5,8 @@ import { IPost } from '../object-types';
 export const POSTS_QUERY = {
   name: 'posts',
   query: gql`
-    query ($pagination: PaginationOption) {
-      posts(pagination: $pagination) {
+    query ($keyword: String, $pagination: PaginationOption) {
+      posts(keyword: $keyword, pagination: $pagination) {
         posts {
           ...PostFields
         }
@@ -27,15 +27,18 @@ interface IPostsResult {
   total: number;
 }
 
+interface IPostsOptions {
+  keyword?: string;
+  pagination?: IPaginationOption;
+}
+
 export const postsQuery = async (
-  option?: IPaginationOption,
+  options?: IPostsOptions,
 ): Promise<IPostsResult> => {
-  const result = await new GqlClient<
-    IPostsResult,
-    { pagination?: IPaginationOption }
-  >(POSTS_QUERY, {
-    pagination: option,
-  }).execute();
+  const result = await new GqlClient<IPostsResult, IPostsOptions>(
+    POSTS_QUERY,
+    options,
+  ).execute();
 
   return result.data;
 };
