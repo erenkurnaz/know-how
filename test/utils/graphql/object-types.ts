@@ -1,4 +1,5 @@
 import { gql } from './graphql.helper';
+import { PaginatedPostResult } from '@api/modules/post/dto';
 
 // OBJECT TYPES //
 export interface IAuthResult {
@@ -83,6 +84,18 @@ export const POST_FRAGMENT = gql`
 `;
 
 // E: OBJECT TYPES //
+
+// PAGINATION //
+export interface IPaginationOption {
+  limit: number;
+  offset: number;
+}
+
+export interface IPaginatedPostResult {
+  posts: IPost[];
+  total: number;
+}
+// E: PAGINATION //
 
 // ERRORS //
 interface IValidationErrorField {

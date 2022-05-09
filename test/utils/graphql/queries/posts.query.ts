@@ -1,21 +1,37 @@
-import { POST_FRAGMENT } from '../object-types';
+import {
+  IPaginatedPostResult,
+  IPaginationOption,
+  POST_FRAGMENT,
+} from '../object-types';
 import { gql, GqlClient } from '../graphql.helper';
-import { IPost } from '../object-types';
 
 export const POSTS_QUERY = {
   name: 'posts',
   query: gql`
-    query {
-      posts {
-        ...PostFields
+    query ($keyword: String, $pagination: PaginationOption) {
+      posts(keyword: $keyword, pagination: $pagination) {
+        posts {
+          ...PostFields
+        }
+        total
       }
     }
     ${POST_FRAGMENT}
   `,
 };
 
-export const postsQuery = async (): Promise<IPost[]> => {
-  const result = await new GqlClient<IPost[]>(POSTS_QUERY).execute();
+interface IPostsOptions {
+  keyword?: string;
+  pagination?: IPaginationOption;
+}
+
+export const postsQuery = async (
+  options?: IPostsOptions,
+): Promise<IPaginatedPostResult> => {
+  const result = await new GqlClient<IPaginatedPostResult, IPostsOptions>(
+    POSTS_QUERY,
+    options,
+  ).execute();
 
   return result.data;
 };

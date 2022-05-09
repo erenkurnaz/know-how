@@ -10,6 +10,8 @@ import {
   PostUpdateResult,
   PostDeleteResult,
 } from './dto';
+import { PaginationOption } from '@api/modules/shared/pagination-option';
+import { PaginatedPostResult } from '@api/modules/post/dto/paginated-post.result';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -40,15 +42,13 @@ export class PostResolver {
     return await this.postService.delete(id, userId);
   }
 
-  @Query(() => [Post])
-  async feed(@CurrentUser('id') userId: string): Promise<PostDTO[]> {
+  @Query(() => PaginatedPostResult)
+  async feed(
+    @CurrentUser('id') userId: string,
+    @Args('pagination', { nullable: true })
+    pagination: PaginationOption,
+  ): Promise<PaginatedPostResult> {
     return await this.postService.getFeed(userId);
-  }
-
-  @Public()
-  @Query(() => [Post])
-  async postSearch(@Args('keyword') keyword: string): Promise<PostDTO[]> {
-    return await this.postService.search(keyword);
   }
 
   @Public()
@@ -58,9 +58,14 @@ export class PostResolver {
   }
 
   @Public()
-  @Query(() => [Post])
-  async posts(): Promise<PostDTO[]> {
-    return await this.postService.findAll();
+  @Query(() => PaginatedPostResult)
+  async posts(
+    @Args('pagination', { nullable: true })
+    pagination: PaginationOption,
+    @Args('keyword', { nullable: true })
+    keyword?: string,
+  ): Promise<PaginatedPostResult> {
+    return await this.postService.findAll(pagination, keyword);
   }
 
   @Public()
