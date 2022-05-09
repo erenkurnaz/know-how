@@ -7,7 +7,6 @@ import { createTag } from '../utils/helpers/tag.helper';
 import {
   postsByUserIdQuery,
   postQuery,
-  postSearchQuery,
   postsQuery,
 } from '../utils/graphql/queries';
 import {
@@ -20,6 +19,7 @@ import { IPost, IUser } from '../utils/graphql/object-types';
 describe('Post', () => {
   let USER: IUser;
   let ACCESS_TOKEN: string;
+
   beforeEach(async () => {
     await clearDatabase();
 
@@ -49,9 +49,28 @@ describe('Post', () => {
   });
 
   it('should return all posts', async () => {
-    const posts = await postsQuery();
+    const postsResult = await postsQuery();
 
-    expect(posts).toEqual([]);
+    expect(postsResult.posts).toEqual([]);
+    expect(postsResult.total).toEqual(0);
+  });
+
+  it('should return paginated posts', async () => {
+    await Promise.all([
+      createPost(ACCESS_TOKEN),
+      createPost(ACCESS_TOKEN),
+      createPost(ACCESS_TOKEN),
+    ]);
+
+    const { posts, total } = await postsQuery({
+      pagination: {
+        limit: 2,
+        offset: 0,
+      },
+    });
+
+    expect(posts.length).toEqual(2);
+    expect(total).toEqual(3);
   });
 
   it('should return posts by search keyword', async () => {
@@ -61,9 +80,10 @@ describe('Post', () => {
       createPost(ACCESS_TOKEN),
     ]);
 
-    const posts = await postSearchQuery({ keyword: POST_1.content });
+    const result = await postsQuery({ keyword: POST_1.content });
 
-    expect(posts).toEqual([POST_1]);
+    expect(result.posts).toEqual([POST_1]);
+    expect(result.total).toEqual(1);
   });
 
   it('should return posts by userId', async () => {

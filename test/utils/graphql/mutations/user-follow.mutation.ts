@@ -1,15 +1,26 @@
 import { gql, GqlClient } from '../graphql.helper';
-import { IServerError, IUser, USER_FRAGMENT } from '../object-types';
+import {
+  IServerError,
+  IUser,
+  SERVER_ERROR_FRAGMENT,
+  USER_FRAGMENT,
+} from '../object-types';
 
 export const USER_FOLLOW_MUTATION = {
   name: 'followUser',
   query: gql`
     mutation ($userId: String!) {
       followUser(userId: $userId) {
-        ...UserFields
+        ... on User {
+          ...UserFields
+        }
+        ... on ServerError {
+          ...ServerErrorFields
+        }
       }
     }
     ${USER_FRAGMENT}
+    ${SERVER_ERROR_FRAGMENT}
   `,
 };
 
