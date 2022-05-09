@@ -27,6 +27,11 @@ type Mutation {
   updateUser(input: UpdateUserInput!): UserUpdateResult!
 }
 
+input PaginationOption {
+  limit: Float = 6
+  offset: Float = 0
+}
+
 type Post {
   content: String!
   createdAt: DateTime!
@@ -49,12 +54,17 @@ input PostInput {
 
 union PostUpdateResult = Post | ServerError | ValidationError
 
+type PostsResult {
+  posts: [Post!]!
+  total: Float!
+}
+
 type Query {
   currentUser: User!
   feed: [Post!]!
   post(id: String!): Post!
   postSearch(keyword: String!): [Post!]!
-  posts: [Post!]!
+  posts(keyword: String, pagination: PaginationOption): PostsResult!
   postsByUserId(userId: String!): [Post!]!
   refreshAccessToken: RefreshResult!
   tags: [Tag!]!

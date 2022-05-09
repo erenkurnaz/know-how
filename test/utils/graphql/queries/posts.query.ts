@@ -5,17 +5,37 @@ import { IPost } from '../object-types';
 export const POSTS_QUERY = {
   name: 'posts',
   query: gql`
-    query {
-      posts {
-        ...PostFields
+    query ($pagination: PaginationOption) {
+      posts(pagination: $pagination) {
+        posts {
+          ...PostFields
+        }
+        total
       }
     }
     ${POST_FRAGMENT}
   `,
 };
 
-export const postsQuery = async (): Promise<IPost[]> => {
-  const result = await new GqlClient<IPost[]>(POSTS_QUERY).execute();
+interface IPaginationOption {
+  limit: number;
+  offset: number;
+}
+
+interface IPostsResult {
+  posts: IPost[];
+  total: number;
+}
+
+export const postsQuery = async (
+  option?: IPaginationOption,
+): Promise<IPostsResult> => {
+  const result = await new GqlClient<
+    IPostsResult,
+    { pagination?: IPaginationOption }
+  >(POSTS_QUERY, {
+    pagination: option,
+  }).execute();
 
   return result.data;
 };

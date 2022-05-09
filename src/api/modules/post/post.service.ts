@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { wrap } from '@mikro-orm/core';
+import { QueryOrder, wrap } from '@mikro-orm/core';
 
 import { Post, PostDTO, PostRepository } from '@database/post';
 import { User, UserRepository } from '@database/user';
 import { PostInput } from './dto';
 import { TagRepository } from '@database/tag';
 import { Exception } from '@src/errors';
+import { PaginationOption } from '@api/modules/shared/pagination-option';
+import { PostsResult } from '@api/modules/post/dto/posts.result';
 
 @Injectable()
 export class PostService {
@@ -15,12 +17,32 @@ export class PostService {
     private readonly tagRepository: TagRepository,
   ) {}
 
-  async findAll(): Promise<PostDTO[]> {
-    const posts = await this.postRepository.findAll({
+  async findAll(
+    pagination: PaginationOption,
+    keyword?: string,
+  ): Promise<PostsResult> {
+    let where = {};
+    if (keyword) {
+      where = {
+        $or: [
+          { title: { $ilike: `%${keyword}%` } },
+          { content: { $ilike: `%${keyword}%` } },
+          { tags: { name: { $ilike: `%${keyword}%` } } },
+        ],
+      };
+    }
+
+    const [posts, total] = await this.postRepository.findAndCount(where, {
       populate: ['owner', 'tags'],
+      limit: pagination?.limit,
+      offset: pagination?.offset,
+      orderBy: { createdAt: QueryOrder.DESC },
     });
 
-    return posts.map((post) => post.toJSON());
+    return {
+      posts: posts.map((post) => post.toJSON()),
+      total,
+    };
   }
 
   async create(user: User, postDto: PostInput): Promise<PostDTO> {

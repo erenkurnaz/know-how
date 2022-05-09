@@ -10,6 +10,8 @@ import {
   PostUpdateResult,
   PostDeleteResult,
 } from './dto';
+import { PaginationOption } from '@api/modules/shared/pagination-option';
+import { PostsResult } from '@api/modules/post/dto/posts.result';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -58,9 +60,14 @@ export class PostResolver {
   }
 
   @Public()
-  @Query(() => [Post])
-  async posts(): Promise<PostDTO[]> {
-    return await this.postService.findAll();
+  @Query(() => PostsResult)
+  async posts(
+    @Args('pagination', { nullable: true })
+    pagination: PaginationOption,
+    @Args('keyword', { nullable: true })
+    keyword?: string,
+  ): Promise<PostsResult> {
+    return await this.postService.findAll(pagination, keyword);
   }
 
   @Public()

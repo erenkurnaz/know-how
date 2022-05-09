@@ -20,6 +20,7 @@ import { IPost, IUser } from '../utils/graphql/object-types';
 describe('Post', () => {
   let USER: IUser;
   let ACCESS_TOKEN: string;
+
   beforeEach(async () => {
     await clearDatabase();
 
@@ -49,9 +50,26 @@ describe('Post', () => {
   });
 
   it('should return all posts', async () => {
-    const posts = await postsQuery();
+    const postsResult = await postsQuery();
 
-    expect(posts).toEqual([]);
+    expect(postsResult.posts).toEqual([]);
+    expect(postsResult.total).toEqual(0);
+  });
+
+  it('should return paginated posts', async () => {
+    await Promise.all([
+      createPost(ACCESS_TOKEN),
+      createPost(ACCESS_TOKEN),
+      createPost(ACCESS_TOKEN),
+    ]);
+
+    const { posts, total } = await postsQuery({
+      limit: 2,
+      offset: 0,
+    });
+
+    expect(posts.length).toEqual(2);
+    expect(total).toEqual(3);
   });
 
   it('should return posts by search keyword', async () => {
