@@ -33,10 +33,10 @@ describe('Feed', () => {
       currentUser.accessToken,
     );
 
-    const feed = await feedQuery(currentUser.accessToken);
+    const result = await feedQuery(currentUser.accessToken);
 
     expect(followedUser.id).toEqual(AUTH_RESULT.user.id);
-    expect(feed).toMatchObject([POST]);
+    expect(result.posts).toMatchObject([POST]);
   });
 
   it('should return posts by favorited tag', async () => {
@@ -46,9 +46,9 @@ describe('Feed', () => {
       currentUser.accessToken,
     );
 
-    const feed = await feedQuery(currentUser.accessToken);
+    const result = await feedQuery(currentUser.accessToken);
 
     expect(followedTag.id).toEqual(TAG.id);
-    expect(feed).toMatchObject([POST]);
+    expect(result.posts).toMatchObject([POST]);
   });
 });

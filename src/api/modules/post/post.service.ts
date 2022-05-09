@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { QueryOrder, wrap } from '@mikro-orm/core';
 
+import { Exception } from '@src/errors';
 import { Post, PostDTO, PostRepository } from '@database/post';
 import { User, UserRepository } from '@database/user';
-import { PostInput } from './dto';
 import { TagRepository } from '@database/tag';
-import { Exception } from '@src/errors';
 import { PaginationOption } from '@api/modules/shared/pagination-option';
-import { PostsResult } from '@api/modules/post/dto/posts.result';
+import { PaginatedPostResult, PostInput } from './dto';
 
 @Injectable()
 export class PostService {
@@ -20,7 +19,7 @@ export class PostService {
   async findAll(
     pagination: PaginationOption,
     keyword?: string,
-  ): Promise<PostsResult> {
+  ): Promise<PaginatedPostResult> {
     let where = {};
     if (keyword) {
       where = {
@@ -126,22 +125,35 @@ export class PostService {
     return foundPosts.map((post) => post.toJSON());
   }
 
-  async getFeed(userId: string) {
+  async getFeed(
+    userId: string,
+    pagination?: PaginationOption,
+  ): Promise<PaginatedPostResult> {
     const user = await this.userRepository.findOneOrFail(
       { id: userId },
       { populate: ['followings', 'favoriteTags'] },
     );
 
-    const posts = await this.postRepository.find(
+    const [posts, total] = await this.postRepository.findAndCount(
       {
         $or: [
           { owner: { $in: user.followings.getItems() } },
           { tags: { $in: user.favoriteTags.getItems() } },
         ],
       },
-      { populate: ['owner', 'tags'] },
+      {
+        populate: ['owner', 'tags'],
+        limit: pagination?.limit,
+        offset: pagination?.offset,
+        orderBy: {
+          createdAt: QueryOrder.DESC,
+        },
+      },
     );
 
-    return posts.map((post) => post.toJSON());
+    return {
+      posts: posts.map((post) => post.toJSON()),
+      total,
+    };
   }
 }
