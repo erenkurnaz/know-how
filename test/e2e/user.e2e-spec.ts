@@ -2,7 +2,11 @@ import { HttpStatus } from '@nestjs/common';
 import { clearDatabase } from '../utils/helpers/app.helper';
 import { createUserMock } from '../utils/helpers/user.helper';
 import { authorizeUser } from '../utils/helpers/auth.helper';
-import { IUser, IValidationError } from '../utils/graphql/object-types';
+import {
+  IServerError,
+  IUser,
+  IValidationError,
+} from '../utils/graphql/object-types';
 import {
   userFollowMutation,
   userUnfollowMutation,
@@ -110,8 +114,7 @@ describe('User operations', () => {
       expect(FOLLOWED_USER.isFollowing).toEqual(true);
     });
 
-    //TODO: refactor error handling
-    /*it('should fail if self following', async () => {
+    it('should fail if self following', async () => {
       const { user, accessToken } = await authorizeUser(USER);
 
       const error = await userFollowMutation<IServerError>(
@@ -119,9 +122,9 @@ describe('User operations', () => {
         accessToken,
       );
 
-      expect(error?.message).toContain('Bad Request');
-      expect(error?.status).toEqual('500');
-    });*/
+      expect(error?.message).toContain('User cannot self follow');
+      expect(error?.status).toEqual(500);
+    });
   });
 
   describe('when unfollow user', () => {
