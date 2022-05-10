@@ -1,5 +1,4 @@
 import { gql } from './graphql.helper';
-import { PaginatedPostResult } from '@api/modules/post/dto';
 
 // OBJECT TYPES //
 export interface IAuthResult {
@@ -93,6 +92,11 @@ export interface IPaginationOption {
 
 export interface IPaginatedPostResult {
   posts: IPost[];
+  total: number;
+}
+
+export interface IPaginatedTagResult {
+  tags: ITag[];
   total: number;
 }
 // E: PAGINATION //

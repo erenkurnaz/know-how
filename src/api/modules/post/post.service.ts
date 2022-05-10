@@ -5,7 +5,7 @@ import { Exception } from '@src/errors';
 import { Post, PostDTO, PostRepository } from '@database/post';
 import { User, UserRepository } from '@database/user';
 import { TagRepository } from '@database/tag';
-import { PaginationOption } from '@api/modules/shared/pagination-option';
+import { PaginationOption } from '@api/modules/shared';
 import { PaginatedPostResult, PostInput } from './dto';
 
 @Injectable()
@@ -109,20 +109,6 @@ export class PostService {
     );
 
     return posts.map((post) => post.toJSON());
-  }
-
-  async search(keyword: string): Promise<PostDTO[]> {
-    const foundPosts = await this.postRepository.find(
-      {
-        $or: [
-          { title: { $ilike: `%${keyword}%` } },
-          { content: { $ilike: `%${keyword}%` } },
-          { tags: { name: { $ilike: `%${keyword}%` } } },
-        ],
-      },
-      { populate: ['owner', 'tags'] },
-    );
-    return foundPosts.map((post) => post.toJSON());
   }
 
   async getFeed(

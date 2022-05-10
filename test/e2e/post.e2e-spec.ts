@@ -48,42 +48,46 @@ describe('Post', () => {
     expect(post.tags).toEqual([TAG]);
   });
 
-  it('should return all posts', async () => {
-    const postsResult = await postsQuery();
+  describe('when request posts', () => {
+    let POSTS: IPost[];
 
-    expect(postsResult.posts).toEqual([]);
-    expect(postsResult.total).toEqual(0);
-  });
-
-  it('should return paginated posts', async () => {
-    await Promise.all([
-      createPost(ACCESS_TOKEN),
-      createPost(ACCESS_TOKEN),
-      createPost(ACCESS_TOKEN),
-    ]);
-
-    const { posts, total } = await postsQuery({
-      pagination: {
-        limit: 2,
-        offset: 0,
-      },
+    beforeEach(async () => {
+      await Promise.all([
+        createPost(ACCESS_TOKEN),
+        createPost(ACCESS_TOKEN),
+        createPost(ACCESS_TOKEN),
+      ]);
+      POSTS = (await postsQuery()).posts;
     });
 
-    expect(posts.length).toEqual(2);
-    expect(total).toEqual(3);
-  });
+    it('should return all posts', async () => {
+      const postsResult = await postsQuery();
 
-  it('should return posts by search keyword', async () => {
-    const [POST_1] = await Promise.all([
-      createPost(ACCESS_TOKEN),
-      createPost(ACCESS_TOKEN),
-      createPost(ACCESS_TOKEN),
-    ]);
+      expect(postsResult.posts).toEqual(POSTS);
+      expect(postsResult.total).toEqual(3);
+    });
 
-    const result = await postsQuery({ keyword: POST_1.content });
+    it('should return paginated posts', async () => {
+      const { posts, total } = await postsQuery({
+        pagination: {
+          limit: 1,
+          offset: 1,
+        },
+      });
 
-    expect(result.posts).toEqual([POST_1]);
-    expect(result.total).toEqual(1);
+      expect(posts.length).toEqual(1);
+      expect(posts[0]).toEqual(POSTS[1]);
+      expect(total).toEqual(3);
+    });
+
+    it('should return posts by search keyword', async () => {
+      const post = POSTS[0];
+
+      const result = await postsQuery({ keyword: post.content });
+
+      expect(result.posts).toEqual([post]);
+      expect(result.total).toEqual(1);
+    });
   });
 
   it('should return posts by userId', async () => {

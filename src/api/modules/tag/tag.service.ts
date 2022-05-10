@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { QueryOrder } from '@mikro-orm/core';
+
 import { Tag, TagDTO, TagRepository } from '@database/tag';
 import { User, UserRepository } from '@database/user';
-import { UserNotFoundException } from '@api/modules/auth/errors';
 import { Exception } from '@src/errors';
+import { UserNotFoundException } from '@api/modules/auth/errors';
+import { PaginationOption } from '@api/modules/shared';
+import { PaginatedTagResult } from './dto/paginated-tag.result';
 
 @Injectable()
 export class TagService {
@@ -11,11 +15,24 @@ export class TagService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async findAll(userId?: string): Promise<TagDTO[]> {
-    const tags = await this.tagRepository.findAll();
+  async findAll(
+    userId?: string,
+    pagination?: PaginationOption,
+  ): Promise<PaginatedTagResult> {
+    const [tags, total] = await this.tagRepository.findAndCount(
+      {},
+      {
+        limit: pagination?.limit,
+        offset: pagination?.offset,
+        orderBy: { createdAt: QueryOrder.DESC },
+      },
+    );
     const user = await this.getUser(userId);
 
-    return tags.map((tag) => tag.toJSON(user));
+    return {
+      tags: tags.map((tag) => tag.toJSON(user)),
+      total,
+    };
   }
 
   async create(name: string): Promise<TagDTO> {

@@ -1,7 +1,8 @@
-import { createUnionType } from '@nestjs/graphql';
-import { ServerError, ValidationError } from '@api/errors';
-import { Exception, ValidationException } from '@src/errors';
 import { Type } from '@nestjs/common';
+import { createUnionType } from '@nestjs/graphql';
+
+import { Exception, ValidationException } from '@src/errors';
+import { ServerError, ValidationError } from '@api/modules/shared';
 
 export function createErrorableUnion<T>(name: string, type: Type<T>) {
   return createUnionType<Type<T | ValidationError | ServerError>[]>({
