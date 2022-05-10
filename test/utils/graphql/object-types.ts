@@ -1,5 +1,4 @@
 import { gql } from './graphql.helper';
-import { PaginatedPostResult } from '@api/modules/post/dto';
 
 // OBJECT TYPES //
 export interface IAuthResult {
