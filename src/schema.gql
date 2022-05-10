@@ -32,6 +32,11 @@ type PaginatedPostResult {
   total: Float!
 }
 
+type PaginatedTagResult {
+  tags: [Tag!]!
+  total: Float!
+}
+
 input PaginationOption {
   limit: Float = 6
   offset: Float = 0
@@ -66,7 +71,7 @@ type Query {
   posts(keyword: String, pagination: PaginationOption): PaginatedPostResult!
   postsByUserId(userId: String!): [Post!]!
   refreshAccessToken: RefreshResult!
-  tags: [Tag!]!
+  tags(pagination: PaginationOption): PaginatedTagResult!
 }
 
 type RefreshResult {

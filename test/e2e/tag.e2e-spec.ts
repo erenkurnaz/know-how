@@ -93,11 +93,20 @@ describe('Tags', () => {
     });
   });
 
-  it('should return all tags', async () => {
-    const TAG = await createTag(ACCESS_TOKEN);
+  describe('tag pagination', () => {
+    it('should return all tags', async () => {
+      const result = await tagsQuery();
 
-    const tags = await tagsQuery();
+      expect(result.total).toEqual(1);
+      expect(result.tags).toEqual([INITIAL_TAG]);
+    });
 
-    expect(tags).toEqual([INITIAL_TAG, TAG]);
+    it('should return 1 tag from second page', async () => {
+      const LATEST_TAG = await createTag(ACCESS_TOKEN);
+      const { tags, total } = await tagsQuery({ limit: 1, offset: 1 });
+
+      expect(total).toEqual(2);
+      expect(tags).toEqual([LATEST_TAG]);
+    });
   });
 });

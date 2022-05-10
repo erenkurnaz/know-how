@@ -94,6 +94,11 @@ export interface IPaginatedPostResult {
   posts: IPost[];
   total: number;
 }
+
+export interface IPaginatedTagResult {
+  tags: ITag[];
+  total: number;
+}
 // E: PAGINATION //
 
 // ERRORS //
