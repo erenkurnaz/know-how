@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User, UserRepository } from '@database/user';
 import { UserNotFoundException } from '@api/modules/auth/errors';
-import { QueryOrder, wrap } from '@mikro-orm/core';
+import { FilterQuery, QueryOrder, wrap } from '@mikro-orm/core';
 import { UserDTO } from '@database/user/user.entity';
 import { Exception } from '@src/errors';
 import { PaginationInput } from '@api/modules/shared';
@@ -74,15 +74,14 @@ export class UserService {
     pagination?: PaginationInput | undefined,
     userId?: string | undefined,
   ): Promise<PaginatedUserResult> {
-    let where = {};
+    let where: FilterQuery<User> = {};
     let authUser: User | null;
 
     if (keyword) {
       where = {
         $or: [
-          { title: { $ilike: `%${keyword}%` } },
-          { content: { $ilike: `%${keyword}%` } },
-          { tags: { name: { $ilike: `%${keyword}%` } } },
+          { email: { $ilike: `%${keyword}%` } },
+          { fullName: { $ilike: `%${keyword}%` } },
         ],
       };
     }
