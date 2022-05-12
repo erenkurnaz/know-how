@@ -99,6 +99,11 @@ export interface IPaginatedTagResult {
   tags: ITag[];
   total: number;
 }
+
+export interface IPaginatedUserResult {
+  users: IUser[];
+  total: number;
+}
 // E: PAGINATION //
 
 // ERRORS //

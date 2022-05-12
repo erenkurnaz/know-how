@@ -1,15 +1,18 @@
+import { NotImplementedException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { User } from '@database/user';
-import { CurrentUser } from '@api/decorators';
+import { CurrentUser, Public } from '@api/decorators';
 import { UserService } from './user.service';
 import {
+  PaginatedUserResult,
   UpdateUserInput,
   UserFollowResult,
   UserUnfollowResult,
   UserUpdateResult,
 } from './dto';
 import { UserDTO } from '@database/user/user.entity';
+import { PaginationInput } from '@api/modules/shared';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -37,6 +40,16 @@ export class UserResolver {
     @Args('userId') followingId: string,
   ): Promise<UserDTO> {
     return await this.userService.unfollow(followerId, followingId);
+  }
+
+  @Public()
+  @Query(() => PaginatedUserResult)
+  async users(
+    @CurrentUser('id') userId?: string,
+    @Args('keyword', { nullable: true }) keyword?: string,
+    @Args('pagination', { nullable: true }) pagination?: PaginationInput,
+  ) {
+    return this.userService.findAll(keyword, pagination, userId);
   }
 
   @Query(() => User)

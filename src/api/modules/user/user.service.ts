@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from '@database/user';
+import { User, UserRepository } from '@database/user';
 import { UserNotFoundException } from '@api/modules/auth/errors';
-import { wrap } from '@mikro-orm/core';
+import { QueryOrder, wrap } from '@mikro-orm/core';
 import { UserDTO } from '@database/user/user.entity';
 import { Exception } from '@src/errors';
+import { PaginationInput } from '@api/modules/shared';
+import { PaginatedUserResult } from '@api/modules/user/dto';
 
 @Injectable()
 export class UserService {
@@ -65,5 +67,37 @@ export class UserService {
     await this.userRepository.persistAndFlush(follower);
 
     return following.toJSON(follower);
+  }
+
+  async findAll(
+    keyword?: string | undefined,
+    pagination?: PaginationInput | undefined,
+    userId?: string | undefined,
+  ): Promise<PaginatedUserResult> {
+    let where = {};
+    let authUser: User | null;
+
+    if (keyword) {
+      where = {
+        $or: [
+          { title: { $ilike: `%${keyword}%` } },
+          { content: { $ilike: `%${keyword}%` } },
+          { tags: { name: { $ilike: `%${keyword}%` } } },
+        ],
+      };
+    }
+
+    const [users, total] = await this.userRepository.findAndCount(where, {
+      populate: ['followings'],
+      limit: pagination?.limit,
+      offset: pagination?.offset,
+      orderBy: { createdAt: QueryOrder.DESC },
+    });
+    if (userId) authUser = await this.userRepository.findOne({ id: userId });
+
+    return {
+      users: users.map((post) => post.toJSON(authUser)),
+      total,
+    };
   }
 }
