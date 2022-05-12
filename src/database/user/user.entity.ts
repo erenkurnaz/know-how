@@ -83,7 +83,7 @@ export class User extends Base<User> {
   @Property({ nullable: true })
   instagram?: string;
 
-  toJSON(follower?: User): UserDTO {
+  toJSON(follower?: User | null): UserDTO {
     const user = wrap<User>(this).toObject();
     user.isFollowing =
       follower && follower.followings.isInitialized()

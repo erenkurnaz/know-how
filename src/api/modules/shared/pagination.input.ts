@@ -1,7 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class PaginationOption {
+export class PaginationInput {
   @Field(() => Number, { defaultValue: 6 })
   limit: number;
 

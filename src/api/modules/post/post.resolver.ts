@@ -3,7 +3,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Post, PostDTO } from '@database/post';
 import { User } from '@database/user';
 import { CurrentUser, Public } from '@api/decorators';
-import { PaginationOption } from '@api/modules/shared';
+import { PaginationInput } from '@api/modules/shared';
 import { PostService } from './post.service';
 import {
   PostInput,
@@ -46,7 +46,7 @@ export class PostResolver {
   async feed(
     @CurrentUser('id') userId: string,
     @Args('pagination', { nullable: true })
-    pagination: PaginationOption,
+    pagination: PaginationInput,
   ): Promise<PaginatedPostResult> {
     return await this.postService.getFeed(userId, pagination);
   }
@@ -61,7 +61,7 @@ export class PostResolver {
   @Query(() => PaginatedPostResult)
   async posts(
     @Args('pagination', { nullable: true })
-    pagination: PaginationOption,
+    pagination: PaginationInput,
     @Args('keyword', { nullable: true })
     keyword?: string,
   ): Promise<PaginatedPostResult> {

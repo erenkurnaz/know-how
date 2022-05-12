@@ -1,6 +1,6 @@
 import {
   IPaginatedPostResult,
-  IPaginationOption,
+  IPaginationInput,
   POST_FRAGMENT,
 } from '../object-types';
 import { gql, GqlClient } from '../graphql.helper';
@@ -8,7 +8,7 @@ import { gql, GqlClient } from '../graphql.helper';
 export const POSTS_QUERY = {
   name: 'posts',
   query: gql`
-    query ($keyword: String, $pagination: PaginationOption) {
+    query ($keyword: String, $pagination: PaginationInput) {
       posts(keyword: $keyword, pagination: $pagination) {
         posts {
           ...PostFields
@@ -22,7 +22,7 @@ export const POSTS_QUERY = {
 
 interface IPostsOptions {
   keyword?: string;
-  pagination?: IPaginationOption;
+  pagination?: IPaginationInput;
 }
 
 export const postsQuery = async (

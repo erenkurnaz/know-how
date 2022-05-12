@@ -13,6 +13,7 @@ import {
   userUpdateMutation,
 } from '../utils/graphql/mutations';
 import { currentUserQuery } from '../utils/graphql/queries';
+import { usersQuery } from '../utils/graphql/queries/users.query';
 
 describe('User operations', () => {
   let USER: IUser;
@@ -20,6 +21,24 @@ describe('User operations', () => {
   beforeEach(async () => {
     await clearDatabase();
     USER = createUserMock();
+  });
+
+  it('should return paginated users', async () => {
+    await Promise.all([
+      authorizeUser(createUserMock()),
+      authorizeUser(createUserMock()),
+      authorizeUser(createUserMock()),
+    ]);
+
+    const result = await usersQuery({
+      pagination: {
+        limit: 2,
+        offset: 0,
+      },
+    });
+
+    expect(result.total).toEqual(3);
+    expect(result.users.length).toEqual(2);
   });
 
   describe('when request profile', () => {

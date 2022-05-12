@@ -85,7 +85,7 @@ export const POST_FRAGMENT = gql`
 // E: OBJECT TYPES //
 
 // PAGINATION //
-export interface IPaginationOption {
+export interface IPaginationInput {
   limit: number;
   offset: number;
 }
@@ -97,6 +97,11 @@ export interface IPaginatedPostResult {
 
 export interface IPaginatedTagResult {
   tags: ITag[];
+  total: number;
+}
+
+export interface IPaginatedUserResult {
+  users: IUser[];
   total: number;
 }
 // E: PAGINATION //

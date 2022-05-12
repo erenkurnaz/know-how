@@ -1,14 +1,14 @@
 import { gql, GqlClient } from '../graphql.helper';
 import {
   IPaginatedPostResult,
-  IPaginationOption,
+  IPaginationInput,
   POST_FRAGMENT,
 } from '../object-types';
 
 const FEED_QUERY = {
   name: 'feed',
   query: gql`
-    query ($pagination: PaginationOption) {
+    query ($pagination: PaginationInput) {
       feed(pagination: $pagination) {
         posts {
           ...PostFields
@@ -22,11 +22,11 @@ const FEED_QUERY = {
 
 export const feedQuery = async (
   token: string,
-  pagination?: IPaginationOption,
+  pagination?: IPaginationInput,
 ): Promise<IPaginatedPostResult> => {
   const response = await new GqlClient<
     IPaginatedPostResult,
-    { pagination?: IPaginationOption }
+    { pagination?: IPaginationInput }
   >(FEED_QUERY, {
     pagination,
   })

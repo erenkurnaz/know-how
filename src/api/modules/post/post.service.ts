@@ -5,7 +5,7 @@ import { Exception } from '@src/errors';
 import { Post, PostDTO, PostRepository } from '@database/post';
 import { User, UserRepository } from '@database/user';
 import { TagRepository } from '@database/tag';
-import { PaginationOption } from '@api/modules/shared';
+import { PaginationInput } from '@api/modules/shared';
 import { PaginatedPostResult, PostInput } from './dto';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class PostService {
   ) {}
 
   async findAll(
-    pagination: PaginationOption,
+    pagination: PaginationInput,
     keyword?: string,
   ): Promise<PaginatedPostResult> {
     let where = {};
@@ -113,7 +113,7 @@ export class PostService {
 
   async getFeed(
     userId: string,
-    pagination?: PaginationOption,
+    pagination?: PaginationInput,
   ): Promise<PaginatedPostResult> {
     const user = await this.userRepository.findOneOrFail(
       { id: userId },
