@@ -37,7 +37,7 @@ type PaginatedTagResult {
   total: Float!
 }
 
-input PaginationOption {
+input PaginationInput {
   limit: Float = 6
   offset: Float = 0
 }
@@ -66,12 +66,12 @@ union PostUpdateResult = Post | ServerError | ValidationError
 
 type Query {
   currentUser: User!
-  feed(pagination: PaginationOption): PaginatedPostResult!
+  feed(pagination: PaginationInput): PaginatedPostResult!
   post(id: String!): Post!
-  posts(keyword: String, pagination: PaginationOption): PaginatedPostResult!
+  posts(keyword: String, pagination: PaginationInput): PaginatedPostResult!
   postsByUserId(userId: String!): [Post!]!
   refreshAccessToken: RefreshResult!
-  tags(pagination: PaginationOption): PaginatedTagResult!
+  tags(pagination: PaginationInput): PaginatedTagResult!
 }
 
 type RefreshResult {

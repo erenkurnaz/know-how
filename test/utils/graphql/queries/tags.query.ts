@@ -1,6 +1,6 @@
 import {
   IPaginatedTagResult,
-  IPaginationOption,
+  IPaginationInput,
   TAG_FRAGMENT,
 } from '../object-types';
 import { gql, GqlClient } from '../graphql.helper';
@@ -8,7 +8,7 @@ import { gql, GqlClient } from '../graphql.helper';
 export const TAGS_QUERY = {
   name: 'tags',
   query: gql`
-    query ($pagination: PaginationOption) {
+    query ($pagination: PaginationInput) {
       tags(pagination: $pagination) {
         tags {
           ...TagFields
@@ -21,7 +21,7 @@ export const TAGS_QUERY = {
 };
 
 export const tagsQuery = async (
-  pagination?: IPaginationOption,
+  pagination?: IPaginationInput,
 ): Promise<IPaginatedTagResult> => {
   const result = await new GqlClient<IPaginatedTagResult>(TAGS_QUERY, {
     pagination,

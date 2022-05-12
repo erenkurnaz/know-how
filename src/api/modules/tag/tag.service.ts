@@ -5,7 +5,7 @@ import { Tag, TagDTO, TagRepository } from '@database/tag';
 import { User, UserRepository } from '@database/user';
 import { Exception } from '@src/errors';
 import { UserNotFoundException } from '@api/modules/auth/errors';
-import { PaginationOption } from '@api/modules/shared';
+import { PaginationInput } from '@api/modules/shared';
 import { PaginatedTagResult } from './dto/paginated-tag.result';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class TagService {
 
   async findAll(
     userId?: string,
-    pagination?: PaginationOption,
+    pagination?: PaginationInput,
   ): Promise<PaginatedTagResult> {
     const [tags, total] = await this.tagRepository.findAndCount(
       {},

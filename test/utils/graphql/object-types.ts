@@ -85,7 +85,7 @@ export const POST_FRAGMENT = gql`
 // E: OBJECT TYPES //
 
 // PAGINATION //
-export interface IPaginationOption {
+export interface IPaginationInput {
   limit: number;
   offset: number;
 }

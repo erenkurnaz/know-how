@@ -5,7 +5,7 @@ import { User } from '@database/user';
 import { CurrentUser, Public } from '@api/decorators';
 import { TagService } from './tag.service';
 import { TagCreateResult, TagFavoriteResult, TagUnfavoriteResult } from './dto';
-import { PaginationOption } from '@api/modules/shared';
+import { PaginationInput } from '@api/modules/shared';
 import { PaginatedTagResult } from '@api/modules/tag/dto/paginated-tag.result';
 
 @Resolver(() => Tag)
@@ -40,7 +40,7 @@ export class TagResolver {
   @Query(() => PaginatedTagResult)
   async tags(
     @CurrentUser('id') userId: string | undefined,
-    @Args('pagination', { nullable: true }) pagination: PaginationOption,
+    @Args('pagination', { nullable: true }) pagination: PaginationInput,
   ): Promise<PaginatedTagResult> {
     return await this.tagService.findAll(userId, pagination);
   }
